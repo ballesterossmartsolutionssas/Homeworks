@@ -24,6 +24,10 @@ function esParOImparRegular(n) {
     console.log(`Regular -> Error: "${n}" no es un numero valido`);
     return;
   }
+  if (!Number.isInteger(n)) {
+    console.log(`Regular -> Error: "${n}" debe ser un numero entero`);
+    return;
+  }
 
   const resultado = n % 2 === 0 ? "PAR" : "IMPAR";
   console.log(`Regular -> ${n} es ${resultado}`);
@@ -32,6 +36,10 @@ function esParOImparRegular(n) {
 const esParOImparArrow = (n) => {
   if (typeof n !== "number" || Number.isNaN(n)) {
     console.log(`Arrow -> Error: "${n}" no es un numero valido`);
+    return;
+  }
+  if (!Number.isInteger(n)) {
+    console.log(`Arrow -> Error: "${n}" debe ser un numero entero`);
     return;
   }
 
