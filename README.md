@@ -1,16 +1,21 @@
-# Homeworks
+# Homeworks - Challenge Functions
 
-## Homework 01 - Arrays
+Rama: `01-Functions-Challenge`
 
-Este repositorio contiene una practica de funciones de arrays en JavaScript.
+## Entregable
 
-### Contenido
-- `01-arrays.js`: ejemplos practicos de metodos de arrays (instancia y estaticos).
+- `challenge-functions.js`: investigacion de Regular Function vs Arrow Function y funciones PAR/IMPAR.
 
-### Ejecutar
+## Ejecutar
+
 ```bash
-node 01-arrays.js
+node challenge-functions.js
 ```
 
-### Nota sobre la rama
-Git no permite espacios en nombres de rama. Por eso se usa `01-Arrays` como equivalente de `01 - Arrays`.
+## Incluye
+
+- Diferencias entre Regular y Arrow (this, arguments, hoisting, new)
+- Funcion regular `esParOImparRegular(n)`
+- Funcion arrow `esParOImparArrow(n)`
+- Validacion de entrada
+- Casos de prueba (par, impar, invalidos)
