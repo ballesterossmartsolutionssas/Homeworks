@@ -1,16 +1,27 @@
-# Homeworks
+# Homeworks - Homework Arrays
 
-## Homework 01 - Arrays
+Rama: `01-Homework-Arrays`
 
-Este repositorio contiene una practica de funciones de arrays en JavaScript.
+## Entregable
 
-### Contenido
-- `01-arrays.js`: ejemplos practicos de metodos de arrays (instancia y estaticos).
+- `arrays-homework.js`: investigacion y demostracion de funciones/metodos de arrays en JavaScript.
 
-### Ejecutar
+## Ejecutar
+
 ```bash
-node 01-arrays.js
+node arrays-homework.js
 ```
 
-### Nota sobre la rama
-Git no permite espacios en nombres de rama. Por eso se usa `01-Arrays` como equivalente de `01 - Arrays`.
+## Contenido cubierto
+
+- Crear/copiar arrays
+- Agregar/quitar elementos
+- Cortar/pegar/unir
+- Busqueda y verificacion
+- Iteracion y transformacion
+- Logica y reduccion
+- Orden y conversion
+- Aplanado
+- Mutadores adicionales
+- Iteradores
+- Shallow copy con objetos
