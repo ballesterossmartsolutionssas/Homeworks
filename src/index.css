@@ -20,125 +20,153 @@ body {
     text-align: center;
 }
 
-h1,
-h2,
-h3,
-h4 {
-    margin-top: 0;
-}
-
 /* Light Mode Overrides */
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
-        background-color: #f9f9f9;
-    }
-}
-
-.carousel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
-    border-radius: 12px;
-    background-color: #1a1a1a;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-@media (prefers-color-scheme: light) {
-    .carousel-container {
         background-color: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 }
 
-.product-card {
+.turner-container {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
     align-items: center;
-    text-align: center;
-    gap: 1rem;
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.product-image {
-    width: 100%;
-    max-width: 400px;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-    background-color: #333;
-}
-
-.product-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.product-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #646cff;
-}
-
-.product-desc {
-    color: #aaa;
-    font-size: 0.95rem;
-    line-height: 1.4;
+    background: #1a1a1a;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 @media (prefers-color-scheme: light) {
-    .product-desc {
-        color: #555;
+    .turner-container {
+        background: #f5f5f5;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 }
 
-.carousel-controls {
+.display-box {
+    background: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 12px;
+    padding: 3rem 4rem;
+    min-width: 250px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
+    justify-content: center;
 }
 
-.carousel-btn {
-    padding: 0.6rem 1.2rem;
+@media (prefers-color-scheme: light) {
+    .display-box {
+        background: #fff;
+        border: 2px solid #e0e0e0;
+    }
+}
+
+.turn-number {
+    font-size: 5rem;
+    font-weight: 900;
+    color: #646cff;
+    margin: 0;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.turn-label {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.add-turn-form {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+input {
+    flex: 1;
+    padding: 0.8rem;
     border-radius: 6px;
-    border: none;
-    background-color: #646cff;
+    border: 1px solid #555;
+    background-color: #2a2a2a;
     color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
     font-size: 1rem;
 }
 
-.carousel-btn:hover {
+@media (prefers-color-scheme: light) {
+    input {
+        background-color: #fff;
+        color: black;
+        border: 1px solid #ccc;
+    }
+}
+
+button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+.btn-add {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-add:hover {
+    background-color: #43a047;
+}
+
+.btn-add:disabled {
+    background-color: #2e5c30;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-next {
+    background-color: #646cff;
+    color: white;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+.btn-next:hover {
     background-color: #535bf2;
 }
 
-.carousel-btn:active {
-    transform: scale(0.95);
+.btn-next:disabled {
+    background-color: #3b4096;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.indicator {
-    font-size: 0.9rem;
+.status-text {
     color: #888;
-    font-weight: 500;
-    min-width: 50px;
+    font-size: 0.9rem;
+    margin: 0;
 }

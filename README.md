@@ -1,10 +1,10 @@
-# Practice 02 - Carousel Circular Doubly Linked List
+# Practice 03 - Turner System (Circular Linked List)
 
-This project is a React application that implements a fully functional product carousel powered by a **Circular Doubly Linked List** data structure.
+This React application simulates a bank/clinic turner queue system using a **Circular Linked List**.
 
 ## How to Run
 
-1. Clone the repository and checkout the `05-Practice-02-Carousel` branch.
+1. Clone the repository and checkout the `06-Practice-03-TurnerSystem` branch.
 2. Open a terminal in the project root folder.
 3. Install dependencies:
    ```bash
@@ -15,24 +15,22 @@ This project is a React application that implements a fully functional product c
    npm run dev
    ```
 
-## Circular Doubly Linked List
+## Circular Linked List Implementation
 
-The carousel relies on a `CircularDoublyLinkedList` where:
-- Each node has a `value` (the product data), a `next` pointer, and a `prev` pointer.
-- **Circular logic:** 
-  - The `tail` (last node) has its `.next` pointer set to the `head` (first node).
-  - The `head` has its `.prev` pointer set to the `tail`.
-  - This guarantees that navigating "Next" from the last product seamlessly wraps around to the first, and "Previous" from the first product wraps around to the last product without explicitly checking bounds in the UI logic.
+The Turner System uses a `CircularLinkedList` directly in the React state:
+- Each incoming turn is encapsulated in a `Node` containing the number and name, and a `next` pointer.
+- **Circular Logic:**
+  - Standard Singly Linked Lists point the final item's `next` to `null`.
+  - In a Circular Linked List, the `tail` node pointer `next` is always linked back to the `head` node.
+  - Thus, when the system reaches the "last turn" in the queue, clicking "Call Next Turn" will flawlessly loop back to the first turn that was added.
 
-## Auto-Play logic with `useEffect`
+## Communication between Components (Props)
 
-The carousel advances automatically every 2.5 seconds using a `setInterval` inside a `useEffect` hook in `App.jsx`:
-- The interval simply updates the `currentNode` to `currentNode.next`. Thanks to the underlying circular structure, it never reaches a "null" end state.
-- **Cleanup:** We return a cleanup function `() => clearInterval(intervalId)` inside the hook to prevent memory leaks or duplicate timers whenever the component re-renders or unmounts.
-- **User Interaction:** If the user manually clicks "Next" or "Previous", the auto-play pauses so the user can control the carousel at their own pace.
+The application demonstrates React component architecture with props passing:
+- **`App.jsx`**: Acts as the smart container. It holds the `turnList` (the Circular Linked List), the `currentNode` currently being served, and manages all state mutation handlers.
+- **`TurnerDisplay.jsx`**: A purely presentational child component that receives `currentTurn` and `totalTurns` as props to render the numerical UI.
+- **`TurnerControls.jsx`**: Receives an `onAddTurn` callback function from the parent (to push data upwards to App) and an `onNextTurn` callback to trigger the pointer traversal natively in the Parent state. 
 
-## Communication between Components
+## `useEffect` Side Effects
 
-The application follows a simple Parent-Child component pattern:
-- **`App.jsx` (Parent):** Instantiates the Circular Doubly Linked List, manages the `currentNode` state, controls auto-play logic, and defines navigation handlers (`handleNext`, `handlePrev`).
-- **`ProductCarousel.jsx` (Child):** Operates purely functionally to present the UI. It receives the active `product`, current index numbers, and the `onNext` / `onPrev` function handlers via React `props`. When buttons are clicked, it triggers the callback functions passed by its parent.
+Per the requirements, a `useEffect` hook operates in `App.jsx` specifically "listening" to the `currentNode` variable. Every time the current turn pointer changes (whether it's the first initialization or traversing to the next turn via the circular list), a system update message is accurately logged to the browser's console indicating who is currently being served.
