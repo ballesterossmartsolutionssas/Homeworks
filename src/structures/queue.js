@@ -1,21 +1,21 @@
-export class Stack {
+export class Queue {
     constructor() {
         this.items = [];
     }
 
-    push(value) {
+    enqueue(value) {
         this.items.push(value);
         return value;
     }
 
-    pop() {
+    dequeue() {
         if (this.isEmpty()) return null;
-        return this.items.pop();
+        return this.items.shift();
     }
 
     peek() {
         if (this.isEmpty()) return null;
-        return this.items[this.items.length - 1];
+        return this.items[0];
     }
 
     isEmpty() {
@@ -27,6 +27,6 @@ export class Stack {
     }
 
     print() {
-        return [...this.items].reverse();
+        return [...this.items];
     }
 }

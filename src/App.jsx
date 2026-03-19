@@ -1,54 +1,83 @@
 import { useState } from 'react';
-import { Stack } from './structures/stack';
+import { Queue } from './structures/queue';
 import './index.css';
 
-const INITIAL_BOOKS = [
+const createPastArrivalDate = (minutesAgo) => {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - minutesAgo);
+    return date.toISOString();
+};
+
+const createNextArrivalDate = (people) => {
+    const latestArrival = people.reduce((latest, person) => {
+        if (!latest) return person.arrivalDate;
+        return new Date(person.arrivalDate) > new Date(latest) ? person.arrivalDate : latest;
+    }, null);
+
+    const nextDate = latestArrival ? new Date(latestArrival) : new Date();
+    const randomMinutes = Math.floor(Math.random() * 9) + 1;
+    nextDate.setMinutes(nextDate.getMinutes() + randomMinutes);
+
+    return nextDate.toISOString();
+};
+
+const formatArrivalDate = (value) =>
+    new Intl.DateTimeFormat('es-CO', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+    }).format(new Date(value));
+
+const INITIAL_PEOPLE = [
     {
         id: 1,
-        name: 'Clean Code',
-        isbn: '978-0132350884',
-        author: 'Robert C. Martin',
-        editorial: 'Prentice Hall'
+        name: 'Laura Diaz',
+        withdrawalAmount: 180000,
+        arrivalDate: createPastArrivalDate(34)
     },
     {
         id: 2,
-        name: 'The Pragmatic Programmer',
-        isbn: '978-0201616224',
-        author: 'Andrew Hunt',
-        editorial: 'Addison-Wesley'
+        name: 'Sebastian Ruiz',
+        withdrawalAmount: 250000,
+        arrivalDate: createPastArrivalDate(21)
     },
     {
         id: 3,
-        name: 'Eloquent JavaScript',
-        isbn: '978-1593279509',
-        author: 'Marijn Haverbeke',
-        editorial: 'No Starch Press'
+        name: 'Camila Mora',
+        withdrawalAmount: 90000,
+        arrivalDate: createPastArrivalDate(12)
     }
 ];
 
 const EMPTY_FORM = {
     name: '',
-    isbn: '',
-    author: '',
-    editorial: ''
+    withdrawalAmount: ''
 };
 
-function App() {
-    const [booksStack] = useState(() => {
-        const stack = new Stack();
+const formatCurrency = (value) =>
+    new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+    }).format(value);
 
-        INITIAL_BOOKS.forEach((book) => {
-            stack.push(book);
+function App() {
+    const [atmQueue] = useState(() => {
+        const queue = new Queue();
+
+        INITIAL_PEOPLE.forEach((person) => {
+            queue.enqueue(person);
         });
 
-        return stack;
+        return queue;
     });
     const [form, setForm] = useState(EMPTY_FORM);
-    const [lastAction, setLastAction] = useState('Pila inicial cargada con datos mock.');
+    const [lastAction, setLastAction] = useState('Cola inicial cargada con datos mock.');
     const [, setRenderVersion] = useState(0);
 
-    const books = booksStack.print();
-    const topBook = booksStack.peek();
+    const queue = atmQueue
+        .print()
+        .sort((left, right) => new Date(left.arrivalDate) - new Date(right.arrivalDate));
+    const firstPerson = atmQueue.peek();
 
     const forceRender = () => {
         setRenderVersion((prev) => prev + 1);
@@ -66,40 +95,36 @@ function App() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const payload = {
-            id: Date.now(),
-            name: form.name.trim(),
-            isbn: form.isbn.trim(),
-            author: form.author.trim(),
-            editorial: form.editorial.trim()
-        };
+        const name = form.name.trim();
+        const withdrawalAmount = Number(form.withdrawalAmount);
 
-        const hasEmptyFields =
-            payload.name === '' ||
-            payload.isbn === '' ||
-            payload.author === '' ||
-            payload.editorial === '';
-
-        if (hasEmptyFields) {
-            setLastAction('Completa todos los campos antes de agregar el libro.');
+        if (name === '' || Number.isNaN(withdrawalAmount) || withdrawalAmount <= 0) {
+            setLastAction('Ingresa un nombre y un monto de retiro valido.');
             return;
         }
 
-        booksStack.push(payload);
+        const payload = {
+            id: Date.now(),
+            name,
+            withdrawalAmount,
+            arrivalDate: createNextArrivalDate(atmQueue.print())
+        };
+
+        atmQueue.enqueue(payload);
         setForm(EMPTY_FORM);
-        setLastAction(`Libro agregado al tope: ${payload.name}.`);
+        setLastAction(`Persona agregada a la cola: ${payload.name}.`);
         forceRender();
     };
 
-    const handlePop = () => {
-        const removedBook = booksStack.pop();
+    const handleDequeue = () => {
+        const nextPerson = atmQueue.dequeue();
 
-        if (!removedBook) {
-            setLastAction('La pila esta vacia. No hay libros para retirar.');
+        if (!nextPerson) {
+            setLastAction('La cola esta vacia. No hay personas por atender.');
             return;
         }
 
-        setLastAction(`Libro retirado del tope: ${removedBook.name}.`);
+        setLastAction(`Turno atendido: ${nextPerson.name}.`);
         forceRender();
     };
 
@@ -107,12 +132,12 @@ function App() {
         <main className="page-shell">
             <section className="hero">
                 <div>
-                    <p className="eyebrow">Challenge 04</p>
-                    <h1>Books Stack</h1>
+                    <p className="eyebrow">Practice 05</p>
+                    <h1>ATM Queue</h1>
                     <p className="hero-copy">
-                        Implementacion de una pila de libros con React usando el principio
-                        LIFO, datos mock, formulario para agregar nuevos elementos y visualizacion
-                        completa en pantalla.
+                        Implementacion de una cola FIFO para un cajero, con personas que
+                        registran nombre y monto de retiro, mientras el sistema asigna
+                        automaticamente la fecha de llegada.
                     </p>
                     <p className="author-line">
                         Presentado por: Juan Camilo Ballesteros Sierra - Codigo 2230721
@@ -121,16 +146,16 @@ function App() {
 
                 <div className="hero-stats">
                     <article className="stat-card">
-                        <span>Total en pila</span>
-                        <strong>{booksStack.size()}</strong>
+                        <span>Total en cola</span>
+                        <strong>{atmQueue.size()}</strong>
                     </article>
                     <article className="stat-card">
                         <span>Estado</span>
-                        <strong>{booksStack.isEmpty() ? 'Vacia' : 'Activa'}</strong>
+                        <strong>{atmQueue.isEmpty() ? 'Vacia' : 'Activa'}</strong>
                     </article>
                     <article className="stat-card">
-                        <span>Tope actual</span>
-                        <strong>{topBook ? topBook.name : 'Sin libros'}</strong>
+                        <span>Siguiente turno</span>
+                        <strong>{firstPerson ? firstPerson.name : 'Sin personas'}</strong>
                     </article>
                 </div>
             </section>
@@ -140,56 +165,44 @@ function App() {
                     <div className="panel-heading">
                         <div>
                             <p className="panel-label">Formulario</p>
-                            <h2>Agregar libro a la pila</h2>
+                            <h2>Agregar persona a la cola</h2>
                         </div>
-                        <button type="button" className="secondary-button" onClick={handlePop}>
-                            Pop del tope
+                        <button type="button" className="secondary-button" onClick={handleDequeue}>
+                            Atender siguiente
                         </button>
                     </div>
 
-                    <form className="book-form" onSubmit={handleSubmit}>
+                    <form className="queue-form" onSubmit={handleSubmit}>
                         <label>
                             Nombre
                             <input
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
-                                placeholder="Ej. Don Quijote de la Mancha"
+                                placeholder="Ej. Andres Gomez"
                             />
                         </label>
 
                         <label>
-                            ISBN
+                            Monto de retiro
                             <input
-                                name="isbn"
-                                value={form.isbn}
+                                type="number"
+                                min="1000"
+                                step="1000"
+                                name="withdrawalAmount"
+                                value={form.withdrawalAmount}
                                 onChange={handleChange}
-                                placeholder="Ej. 978-0060934347"
+                                placeholder="Ej. 150000"
                             />
                         </label>
 
-                        <label>
-                            Autor
-                            <input
-                                name="author"
-                                value={form.author}
-                                onChange={handleChange}
-                                placeholder="Ej. Miguel de Cervantes"
-                            />
-                        </label>
-
-                        <label>
-                            Editorial
-                            <input
-                                name="editorial"
-                                value={form.editorial}
-                                onChange={handleChange}
-                                placeholder="Ej. Francisco de Robles"
-                            />
-                        </label>
+                        <div className="system-box">
+                            <span>Fecha de llegada</span>
+                            <strong>Asignada automaticamente por el sistema</strong>
+                        </div>
 
                         <button type="submit" className="primary-button">
-                            Push a la pila
+                            Enqueue a la cola
                         </button>
                     </form>
 
@@ -200,38 +213,37 @@ function App() {
                     <div className="panel-heading">
                         <div>
                             <p className="panel-label">Impresion</p>
-                            <h2>Stack de libros en pantalla</h2>
+                            <h2>Cola ordenada por llegada</h2>
                         </div>
                     </div>
 
                     <div className="top-preview">
                         <span>Peek actual</span>
                         <strong>
-                            {topBook
-                                ? `${topBook.name} | ${topBook.author}`
-                                : 'La pila no tiene elementos'}
+                            {firstPerson
+                                ? `${firstPerson.name} | ${formatCurrency(firstPerson.withdrawalAmount)}`
+                                : 'La cola no tiene personas'}
                         </strong>
                     </div>
 
-                    <div className="stack-list">
-                        {books.length > 0 ? (
-                            books.map((book, index) => (
+                    <div className="queue-list">
+                        {queue.length > 0 ? (
+                            queue.map((person, index) => (
                                 <article
-                                    key={book.id}
-                                    className={`book-card ${index === 0 ? 'book-card-top' : ''}`}
+                                    key={person.id}
+                                    className={`person-card ${index === 0 ? 'person-card-front' : ''}`}
                                 >
-                                    <div className="book-level">
-                                        <span>{index === 0 ? 'TOP' : `Nivel ${books.length - index}`}</span>
+                                    <div className="turn-badge">
+                                        <span>{index === 0 ? 'FRONT' : `Turno ${index + 1}`}</span>
                                     </div>
-                                    <h3>{book.name}</h3>
-                                    <p>ISBN: {book.isbn}</p>
-                                    <p>Autor: {book.author}</p>
-                                    <p>Editorial: {book.editorial}</p>
+                                    <h3>{person.name}</h3>
+                                    <p>Retiro: {formatCurrency(person.withdrawalAmount)}</p>
+                                    <p>Llegada: {formatArrivalDate(person.arrivalDate)}</p>
                                 </article>
                             ))
                         ) : (
                             <p className="empty-state">
-                                La pila esta vacia. Agrega un libro desde el formulario.
+                                La cola esta vacia. Agrega personas desde el formulario.
                             </p>
                         )}
                     </div>
