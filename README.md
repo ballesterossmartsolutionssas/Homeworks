@@ -1,38 +1,30 @@
-# Parcial 1 - Movilidad Urbana
+# Practice 05 - ATM Queue
 
-Aplicacion en React para gestionar vehiculos de una empresa de movilidad usando estructuras de datos implementadas manualmente.
+Aplicacion en React para simular la cola de atencion de un cajero automatico usando una estructura `Queue` implementada manualmente.
 
-## Integrante
+## Estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
 ## Requisitos implementados
 
-- Gestionar vehiculos disponibles con **Lista Enlazada Simple**.
-- Registrar historial de alquileres con **Lista Doblemente Enlazada**.
-- Rotar vehiculo destacado con **Lista Circular**.
-- Administrar inversionistas activos con **Lista Circular Doblemente Enlazada**.
-- Mostrar toda la informacion en la app React.
-- Al alquilar un vehiculo:
-  - se elimina de disponibles,
-  - se agrega automaticamente al historial.
-- Rotacion automatica del destacado cada 5 segundos.
+- Cola de personas para un ATM.
+- Cada persona tiene nombre, monto de retiro y fecha de llegada.
+- Carga inicial con datos mock.
+- Formulario para agregar nuevas personas a la cola.
+- La fecha de llegada es asignada automaticamente por el sistema.
+- Impresion de la cola en pantalla segun el orden de llegada.
+- Boton para atender a la siguiente persona usando `dequeue`.
 
-## Estructuras usadas
+## Estructura usada
 
-- `src/structures/linkedList.js` -> `LinkedList` (vehiculos disponibles)
-- `src/structures/doublyLinkedList.js` -> `DoublyLinkedList` (historial)
-- `src/structures/circularLinkedList.js` -> `CircularLinkedList` (destacados)
-- `src/structures/doublyCircularLinkedList.js` -> `DoublyCircularLinkedList` (inversionistas)
+- `src/structures/queue.js`: implementacion de la cola con `enqueue`, `dequeue`, `peek`, `isEmpty`, `size` y `print`.
 
-## Componentes principales
+## Pantalla principal
 
-- `src/App.jsx`: estado general y reglas de negocio del parcial.
-- `src/components/AvailableVehicles.jsx`: lista de disponibles y boton `Alquilar`.
-- `src/components/RentalHistory.jsx`: visualizacion del historial.
-- `src/components/FeaturedVehicle.jsx`: tarjeta del vehiculo destacado actual.
-- `src/components/ActiveInvestors.jsx`: lista de inversionistas activos.
+- `src/App.jsx`: logica de la cola, formulario, mock data y render de personas.
+- `src/index.css`: estilos de la practica.
 
 ## Ejecucion local
 
