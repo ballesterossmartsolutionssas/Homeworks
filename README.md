@@ -1,38 +1,30 @@
-# Parcial 1 - Movilidad Urbana
+# Practice 04 - Books Stack
 
-Aplicacion en React para gestionar vehiculos de una empresa de movilidad usando estructuras de datos implementadas manualmente.
+Aplicacion en React para manejar una pila de libros usando una estructura `Stack` implementada manualmente.
 
-## Integrante
+## Estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
 ## Requisitos implementados
 
-- Gestionar vehiculos disponibles con **Lista Enlazada Simple**.
-- Registrar historial de alquileres con **Lista Doblemente Enlazada**.
-- Rotar vehiculo destacado con **Lista Circular**.
-- Administrar inversionistas activos con **Lista Circular Doblemente Enlazada**.
-- Mostrar toda la informacion en la app React.
-- Al alquilar un vehiculo:
-  - se elimina de disponibles,
-  - se agrega automaticamente al historial.
-- Rotacion automatica del destacado cada 5 segundos.
+- Creacion y manejo de una pila de libros.
+- Cada libro tiene nombre, ISBN, autor y editorial.
+- Carga inicial con datos mock.
+- Formulario para agregar nuevos libros a la pila.
+- Visualizacion del `peek` actual.
+- Impresion de la pila completa en pantalla.
+- Boton para retirar el libro del tope usando `pop`.
 
-## Estructuras usadas
+## Estructura usada
 
-- `src/structures/linkedList.js` -> `LinkedList` (vehiculos disponibles)
-- `src/structures/doublyLinkedList.js` -> `DoublyLinkedList` (historial)
-- `src/structures/circularLinkedList.js` -> `CircularLinkedList` (destacados)
-- `src/structures/doublyCircularLinkedList.js` -> `DoublyCircularLinkedList` (inversionistas)
+- `src/structures/stack.js`: implementacion con `push`, `pop`, `peek`, `isEmpty`, `size` y `print`.
 
-## Componentes principales
+## Pantalla principal
 
-- `src/App.jsx`: estado general y reglas de negocio del parcial.
-- `src/components/AvailableVehicles.jsx`: lista de disponibles y boton `Alquilar`.
-- `src/components/RentalHistory.jsx`: visualizacion del historial.
-- `src/components/FeaturedVehicle.jsx`: tarjeta del vehiculo destacado actual.
-- `src/components/ActiveInvestors.jsx`: lista de inversionistas activos.
+- `src/App.jsx`: logica principal de la pila, formulario y render del contenido.
+- `src/index.css`: estilos de la practica.
 
 ## Ejecucion local
 
