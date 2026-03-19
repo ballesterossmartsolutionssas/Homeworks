@@ -1,38 +1,42 @@
-# Parcial 1 - Movilidad Urbana
+# Challenge 06 - Demo Login
 
-Aplicacion en React para gestionar vehiculos de una empresa de movilidad usando estructuras de datos implementadas manualmente.
+Aplicacion en React con demo login, Context API y rutas privadas para acceder a dos ejercicios protegidos.
 
-## Integrante
+## Estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
-## Requisitos implementados
+## Credenciales demo
 
-- Gestionar vehiculos disponibles con **Lista Enlazada Simple**.
-- Registrar historial de alquileres con **Lista Doblemente Enlazada**.
-- Rotar vehiculo destacado con **Lista Circular**.
-- Administrar inversionistas activos con **Lista Circular Doblemente Enlazada**.
-- Mostrar toda la informacion en la app React.
-- Al alquilar un vehiculo:
-  - se elimina de disponibles,
-  - se agrega automaticamente al historial.
-- Rotacion automatica del destacado cada 5 segundos.
+- Email: `user@mail.com`
+- Password: `123`
 
-## Estructuras usadas
+## Funcionalidades
 
-- `src/structures/linkedList.js` -> `LinkedList` (vehiculos disponibles)
-- `src/structures/doublyLinkedList.js` -> `DoublyLinkedList` (historial)
-- `src/structures/circularLinkedList.js` -> `CircularLinkedList` (destacados)
-- `src/structures/doublyCircularLinkedList.js` -> `DoublyCircularLinkedList` (inversionistas)
+- Login validando las credenciales solicitadas en el enunciado.
+- Manejo de autenticacion con `Context`, `Provider` y `useState`.
+- Persistencia basica del usuario autenticado en `localStorage`.
+- Rutas privadas con `react-router-dom`.
+- Logout y redireccion al login.
+- Visualizacion del usuario actual cuando la sesion esta iniciada.
 
-## Componentes principales
+## Paginas privadas
 
-- `src/App.jsx`: estado general y reglas de negocio del parcial.
-- `src/components/AvailableVehicles.jsx`: lista de disponibles y boton `Alquilar`.
-- `src/components/RentalHistory.jsx`: visualizacion del historial.
-- `src/components/FeaturedVehicle.jsx`: tarjeta del vehiculo destacado actual.
-- `src/components/ActiveInvestors.jsx`: lista de inversionistas activos.
+- `/dashboard`: panel principal del usuario autenticado.
+- `/books-stack`: ejercicio de `Practice 04 - Books Stack`.
+- `/atm-queue`: ejercicio de `Practice 05 - ATM Queue`.
+
+## Estructura principal
+
+- `src/context/AuthContext.jsx`: contexto y provider de autenticacion.
+- `src/hooks/useAuth.js`: custom hook para consumir el contexto.
+- `src/components/PrivateRoute.jsx`: proteccion de rutas.
+- `src/components/AppLayout.jsx`: layout privado con navegacion y logout.
+- `src/pages/LoginPage.jsx`: pantalla de inicio de sesion.
+- `src/pages/DashboardPage.jsx`: dashboard privado.
+- `src/pages/BooksStackPage.jsx`: practica 04 protegida.
+- `src/pages/ATMQueuePage.jsx`: practica 05 protegida.
 
 ## Ejecucion local
 
