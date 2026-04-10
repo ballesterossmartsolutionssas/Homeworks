@@ -1,16 +1,29 @@
-# Homeworks
+# Challenge 09 - N-ary Menu
 
-## Homework 01 - Arrays
+Aplicacion en React que modela un menu lateral como un arbol n-ario. Cada nodo del arbol contiene `title`, `link` y `component`, y el sidebar se imprime recursivamente en pantalla para navegar entre menus y submenus.
 
-Este repositorio contiene una practica de funciones de arrays en JavaScript.
+## Estudiante
 
-### Contenido
-- `01-arrays.js`: ejemplos practicos de metodos de arrays (instancia y estaticos).
+- Juan Camilo Ballesteros Sierra
+- Codigo: 2230721
 
-### Ejecutar
-```bash
-node 01-arrays.js
-```
+## Requisitos implementados
 
-### Nota sobre la rama
-Git no permite espacios en nombres de rama. Por eso se usa `01-Arrays` como equivalente de `01 - Arrays`.
+- Proyecto nuevo en React con Vite.
+- Arbol n-ario con menus y submenus.
+- Cada item del menu tiene titulo, link y componente asociado.
+- Sidebar renderizado a partir del arbol.
+- Navegacion entre secciones usando `react-router-dom`.
+
+## Estructura principal
+
+- `src/structures/MenuTree.js`: clases `MenuNode` y `MenuTree`.
+- `src/data/menuTree.jsx`: definicion del menu y asignacion de componentes.
+- `src/App.jsx`: layout principal, render recursivo del sidebar y rutas.
+- `src/styles.css`: tema visual del reto.
+
+## Ejecucion local
+
+1. `npm install`
+2. `npm run dev`
+3. `npm run build`
