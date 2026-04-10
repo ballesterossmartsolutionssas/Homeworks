@@ -1,0 +1,225 @@
+:root {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', Arial, sans-serif;
+    color: #12263f;
+    background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 28%),
+        radial-gradient(circle at right bottom, rgba(8, 145, 178, 0.2), transparent 28%),
+        linear-gradient(140deg, #eff6ff 0%, #ecfccb 52%, #cffafe 100%);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+.page-shell {
+    width: min(1200px, 94vw);
+    margin: 0 auto;
+    padding: 2rem 0 3rem;
+    display: grid;
+    gap: 1.2rem;
+}
+
+.hero-card,
+.panel-card,
+.tree-card {
+    border-radius: 28px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.1);
+}
+
+.hero-card {
+    padding: 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+}
+
+.hero-kicker,
+.section-tag {
+    margin: 0 0 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0f766e;
+}
+
+.hero-card h1,
+.panel-card h2,
+.tree-card h2 {
+    margin: 0;
+}
+
+.hero-copy,
+.tree-note {
+    color: #475569;
+}
+
+.ghost-button {
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #f8fafc;
+    background: linear-gradient(135deg, #0f766e, #0891b2);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.panel-card,
+.tree-card {
+    padding: 1.45rem;
+}
+
+.chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+.number-chip {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0c4a6e;
+    font-weight: 700;
+}
+
+.search-box {
+    margin-top: 1.2rem;
+    padding: 1rem;
+    border-radius: 22px;
+    background: #f8fafc;
+}
+
+.search-box label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.search-box input {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+}
+
+.search-result {
+    margin: 0.8rem 0 0;
+    font-weight: 700;
+}
+
+.search-result.success {
+    color: #166534;
+}
+
+.search-result.warning {
+    color: #9a3412;
+}
+
+.traversal-stack {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1rem;
+}
+
+.traversal-stack div {
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #f8fafc, #dbeafe);
+}
+
+.traversal-stack span {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #475569;
+}
+
+.traversal-stack strong {
+    color: #0f172a;
+}
+
+.tree-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+}
+
+.tree-canvas {
+    margin-top: 1rem;
+    height: 560px;
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(8, 145, 178, 0.12), rgba(255, 255, 255, 0.96)),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(148, 163, 184, 0.08) 40px
+        );
+}
+
+.rd3t-label__title {
+    fill: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.rd3t-label__attributes {
+    fill: #334155;
+    font-size: 12px;
+}
+
+.rd3t-link {
+    stroke: #0f766e;
+    stroke-width: 2.5px;
+}
+
+.rd3t-node circle {
+    fill: #f8fafc;
+    stroke: #0f766e;
+    stroke-width: 3px;
+}
+
+@media (max-width: 900px) {
+    .hero-card,
+    .tree-header,
+    .info-grid {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .tree-canvas {
+        height: 460px;
+    }
+}

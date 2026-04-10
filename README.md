@@ -1,16 +1,28 @@
-# Homeworks
+# Challenge 08 - Binary Tree
 
-## Homework 01 - Arrays
+Aplicacion en React para construir un arbol binario de busqueda, imprimir sus recorridos en consola (`inorder`, `postorder`, `preorder`), verificar si un valor existe dentro del arbol y visualizar la estructura usando `react-d3-tree`.
 
-Este repositorio contiene una practica de funciones de arrays en JavaScript.
+## Estudiante
 
-### Contenido
-- `01-arrays.js`: ejemplos practicos de metodos de arrays (instancia y estaticos).
+- Juan Camilo Ballesteros Sierra
+- Codigo: 2230721
 
-### Ejecutar
-```bash
-node 01-arrays.js
-```
+## Requisitos implementados
 
-### Nota sobre la rama
-Git no permite espacios en nombres de rama. Por eso se usa `01-Arrays` como equivalente de `01 - Arrays`.
+- Insercion de una serie fija de numeros en un nuevo arbol binario.
+- Metodo `contains` para validar si un valor existe en el arbol.
+- Recorridos `inorder`, `postorder` y `preorder`.
+- Impresion de resultados en consola al cargar la app y desde un boton manual.
+- Visualizacion grafica del arbol con `react-d3-tree`.
+
+## Estructura principal
+
+- `src/structures/BinaryTree.js`: clase `TreeNode` y clase `BinaryTree`.
+- `src/App.jsx`: datos de prueba, recorridos, busqueda y render del arbol.
+- `src/styles.css`: interfaz y layout del reto.
+
+## Ejecucion local
+
+1. `npm install`
+2. `npm run dev`
+3. `npm run build`
