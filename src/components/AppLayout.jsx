@@ -2,53 +2,59 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 function AppLayout() {
-    const { user, logout } = useAuth();
+    const { user, logout, firebaseReady } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate('/login', { replace: true });
     };
 
     return (
-        <main className="app-shell">
-            <header className="topbar">
+        <main className="app-shell container-xl py-4 py-lg-5">
+            <section className="hero-panel mb-4">
                 <div>
-                    <p className="eyebrow">Challenge 06</p>
-                    <h1>Demo Login With Private Routes</h1>
+                    <p className="hero-kicker">Challenge 07</p>
+                    <h1>Firebase Task Flow</h1>
+                    <p className="hero-copy mb-0">
+                        Login, registro y gestion de tareas usando Firebase Authentication,
+                        Firestore, Context API y custom hooks.
+                    </p>
                 </div>
 
-                <div className="topbar-actions">
-                    <div className="user-pill">
-                        <span>Usuario actual</span>
-                        <strong>{user?.username}</strong>
-                        <small>{user?.email}</small>
+                <div className="hero-user">
+                    <span className={`status-dot ${firebaseReady ? 'online' : 'offline'}`} />
+                    <div>
+                        <small>Sesion activa</small>
+                        <strong>{user?.displayName || user?.email?.split('@')[0] || 'Usuario'}</strong>
+                        <span>{user?.email}</span>
                     </div>
-
-                    <button type="button" className="ghost-button" onClick={handleLogout}>
+                    <button
+                        type="button"
+                        className="btn btn-outline-light rounded-pill"
+                        onClick={handleLogout}
+                    >
                         Logout
                     </button>
                 </div>
-            </header>
+            </section>
 
-            <nav className="nav-panel">
+            <nav className="menu-pills mb-4">
+                <NavLink
+                    to="/tasks"
+                    className={({ isActive }) =>
+                        isActive ? 'menu-pill menu-pill-active' : 'menu-pill'
+                    }
+                >
+                    Tareas
+                </NavLink>
                 <NavLink
                     to="/dashboard"
-                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                    className={({ isActive }) =>
+                        isActive ? 'menu-pill menu-pill-active' : 'menu-pill'
+                    }
                 >
                     Dashboard
-                </NavLink>
-                <NavLink
-                    to="/books-stack"
-                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-                >
-                    Practice 04
-                </NavLink>
-                <NavLink
-                    to="/atm-queue"
-                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-                >
-                    Practice 05
                 </NavLink>
             </nav>
 

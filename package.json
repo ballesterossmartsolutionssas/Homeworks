@@ -1,5 +1,5 @@
 {
-    "name": "homework-05-carousel",
+    "name": "challenge-07-firebase-tasks",
     "private": true,
     "version": "1.0.0",
     "type": "module",
@@ -9,6 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "bootstrap": "^5.3.7",
+        "firebase": "^12.4.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^7.13.1"
@@ -17,6 +19,7 @@
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "@vitejs/plugin-react": "^4.3.1",
+        "sass": "^1.93.2",
         "vite": "^5.4.1"
     }
 }

@@ -1,43 +1,50 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useTasks } from '../hooks/useTasks';
 
 function DashboardPage() {
-    const { user } = useAuth();
+    const { tasks, loading, syncMessage } = useTasks();
+    const completedTasks = tasks.filter((task) => task.done).length;
+    const pendingTasks = tasks.length - completedTasks;
 
     return (
-        <section className="page-card">
-            <div className="section-heading">
-                <div>
-                    <p className="panel-label">Private Area</p>
-                    <h2>Bienvenido, {user?.username}</h2>
-                </div>
-            </div>
+        <section className="dashboard-grid">
+            <article className="glass-card metric-card">
+                <span className="metric-label">Total tasks</span>
+                <strong>{tasks.length}</strong>
+                <p className="mb-0">Tareas sincronizadas desde Firestore para la sesion actual.</p>
+            </article>
 
-            <p className="section-copy">
-                Este dashboard confirma que el usuario ya esta autenticado. Desde aqui
-                puedes navegar a las dos paginas privadas que contienen los ejercicios
-                anteriores.
-            </p>
+            <article className="glass-card metric-card">
+                <span className="metric-label">Pending</span>
+                <strong>{pendingTasks}</strong>
+                <p className="mb-0">Pendientes por completar o revisar.</p>
+            </article>
 
-            <div className="exercise-grid">
-                <article className="exercise-card">
-                    <p className="panel-label">Practice 04</p>
-                    <h3>Books Stack</h3>
-                    <p>Gestiona una pila de libros usando metodos LIFO.</p>
-                    <Link className="primary-button link-button" to="/books-stack">
-                        Ir al ejercicio
-                    </Link>
-                </article>
+            <article className="glass-card metric-card">
+                <span className="metric-label">Done</span>
+                <strong>{completedTasks}</strong>
+                <p className="mb-0">Marcadas como terminadas.</p>
+            </article>
 
-                <article className="exercise-card">
-                    <p className="panel-label">Practice 05</p>
-                    <h3>ATM Queue</h3>
-                    <p>Administra la cola del cajero con orden FIFO y fecha de llegada.</p>
-                    <Link className="primary-button link-button" to="/atm-queue">
-                        Ir al ejercicio
-                    </Link>
-                </article>
-            </div>
+            <article className="glass-card metric-card">
+                <span className="metric-label">Realtime state</span>
+                <strong>{loading ? 'Syncing...' : 'Connected'}</strong>
+                <p className="mb-0">{syncMessage}</p>
+            </article>
+
+            <article className="glass-card dashboard-story">
+                <p className="section-tag">Resumen</p>
+                <h2>Panel general del proyecto</h2>
+                <p>
+                    La aplicacion usa un contexto exclusivo para autenticacion y otro para
+                    datos de tareas. Cada uno delega la logica de Firebase a su propio custom
+                    hook para mantener separadas la UI y el acceso a servicios.
+                </p>
+                <ul className="dashboard-points">
+                    <li>Email/password con Firebase Authentication.</li>
+                    <li>CRUD de tareas con Firestore y escucha en tiempo real.</li>
+                    <li>Rutas privadas, logout y persistencia de sesion administrada por Firebase.</li>
+                </ul>
+            </article>
         </section>
     );
 }
