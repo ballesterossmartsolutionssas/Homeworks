@@ -1,54 +1,37 @@
-# Challenge 06 - Demo Login
+# Parcial 2 - Sistema jerarquico de carpetas y archivos
 
-Aplicacion en React con demo login, Context API y rutas privadas para acceder a dos ejercicios protegidos.
+Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas y archivos con autenticacion y persistencia local.
 
 ## Estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
-## Credenciales demo
+## Usuarios demo
 
-- Email: `user@mail.com`
-- Password: `123`
+- `juan_cam.ballesteros@uao.edu.co` / `123456`
+- `admin@parcial.com` / `admin123`
 
-## Funcionalidades
+## Requisitos implementados
 
-- Login validando las credenciales solicitadas en el enunciado.
-- Manejo de autenticacion con `Context`, `Provider` y `useState`.
-- Persistencia basica del usuario autenticado en `localStorage`.
-- Rutas privadas con `react-router-dom`.
-- Logout y redireccion al login.
-- Visualizacion del usuario actual cuando la sesion esta iniciada.
+- Login mock con usuarios registrados.
+- Usuario autenticado en contexto global.
+- Validacion de usuario registrado antes de crear carpetas o archivos.
+- Arbol n-ario implementado desde cero.
+- Regla de negocio: los archivos no pueden tener hijos, las carpetas si.
+- Persistencia del arbol en `IndexedDB`.
+- Registro del correo creador en cada nodo.
+- Visualizacion jerarquica y panel de detalles con estilos CSS.
 
-## Paginas privadas
+## Ejecutar
 
-- `/dashboard`: panel principal del usuario autenticado.
-- `/books-stack`: ejercicio de `Practice 04 - Books Stack`.
-- `/atm-queue`: ejercicio de `Practice 05 - ATM Queue`.
+```bash
+npm install
+npm run dev
+```
 
-## Estructura principal
+## Validar build
 
-- `src/context/AuthContext.jsx`: contexto y provider de autenticacion.
-- `src/hooks/useAuth.js`: custom hook para consumir el contexto.
-- `src/components/PrivateRoute.jsx`: proteccion de rutas.
-- `src/components/AppLayout.jsx`: layout privado con navegacion y logout.
-- `src/pages/LoginPage.jsx`: pantalla de inicio de sesion.
-- `src/pages/DashboardPage.jsx`: dashboard privado.
-- `src/pages/BooksStackPage.jsx`: practica 04 protegida.
-- `src/pages/ATMQueuePage.jsx`: practica 05 protegida.
-
-## Ejecucion local
-
-1. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-2. Iniciar en desarrollo:
-   ```bash
-   npm run dev
-   ```
-3. Compilar para validar:
-   ```bash
-   npm run build
-   ```
+```bash
+npm run build
+```

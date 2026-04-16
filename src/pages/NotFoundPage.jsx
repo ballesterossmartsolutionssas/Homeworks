@@ -4,11 +4,11 @@ function NotFoundPage() {
     return (
         <main className="login-shell">
             <section className="login-card">
-                <p className="eyebrow">404</p>
-                <h1>Pagina no encontrada</h1>
-                <p>La ruta que intentaste abrir no existe dentro de esta SPA.</p>
-                <Link className="primary-button link-button" to="/dashboard">
-                    Ir al dashboard
+                <p className="eyebrow">Ruta no encontrada</p>
+                <h1>La pagina solicitada no existe</h1>
+                <p>Regresa al inicio de sesion o vuelve al panel principal.</p>
+                <Link className="primary-button link-button" to="/login">
+                    Volver al login
                 </Link>
             </section>
         </main>

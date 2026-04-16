@@ -3,8 +3,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AppLayout from './components/AppLayout';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import BooksStackPage from './pages/BooksStackPage';
-import ATMQueuePage from './pages/ATMQueuePage';
+import FileManagerPage from './pages/FileManagerPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -21,8 +20,7 @@ function App() {
             >
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<DashboardPage />} />
-                <Route path="books-stack" element={<BooksStackPage />} />
-                <Route path="atm-queue" element={<ATMQueuePage />} />
+                <Route path="explorer" element={<FileManagerPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
         </Routes>

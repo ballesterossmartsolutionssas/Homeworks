@@ -14,19 +14,22 @@ function AppLayout() {
         <main className="app-shell">
             <header className="topbar">
                 <div>
-                    <p className="eyebrow">Challenge 06</p>
-                    <h1>Demo Login With Private Routes</h1>
+                    <p className="eyebrow">Parcial 2</p>
+                    <h1>Sistema jerarquico de carpetas y archivos</h1>
+                    <p className="topbar-copy">
+                        Arbol n-ario, autenticacion mock y persistencia en IndexedDB.
+                    </p>
                 </div>
 
                 <div className="topbar-actions">
                     <div className="user-pill">
-                        <span>Usuario actual</span>
+                        <span>Usuario autenticado</span>
                         <strong>{user?.username}</strong>
                         <small>{user?.email}</small>
                     </div>
 
                     <button type="button" className="ghost-button" onClick={handleLogout}>
-                        Logout
+                        Cerrar sesion
                     </button>
                 </div>
             </header>
@@ -36,19 +39,13 @@ function AppLayout() {
                     to="/dashboard"
                     className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
                 >
-                    Dashboard
+                    Resumen
                 </NavLink>
                 <NavLink
-                    to="/books-stack"
+                    to="/explorer"
                     className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
                 >
-                    Practice 04
-                </NavLink>
-                <NavLink
-                    to="/atm-queue"
-                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-                >
-                    Practice 05
+                    Explorador
                 </NavLink>
             </nav>
 

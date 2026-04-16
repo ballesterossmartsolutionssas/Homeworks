@@ -8,11 +8,13 @@ const EMPTY_FORM = {
 };
 
 function LoginPage() {
-    const { login, isAuthenticated } = useAuth();
+    const { login, isAuthenticated, registeredUsers } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [form, setForm] = useState(EMPTY_FORM);
-    const [message, setMessage] = useState('Usa user@mail.com y password 123 para ingresar.');
+    const [message, setMessage] = useState(
+        'Ingresa con un usuario registrado para administrar el arbol.'
+    );
 
     if (isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
@@ -43,23 +45,23 @@ function LoginPage() {
         <main className="login-shell">
             <section className="login-card">
                 <div className="login-copy">
-                    <p className="eyebrow">Challenge 06</p>
-                    <h1>Demo Login Page</h1>
+                    <p className="eyebrow">Parcial 2</p>
+                    <h1>Login del gestor jerarquico</h1>
                     <p>
-                        Inicio de sesion con Context API, Provider, estado global y rutas
-                        privadas para acceder a las dos practicas anteriores.
+                        Aplicacion web con autenticacion mock, arbol n-ario hecho desde
+                        cero y persistencia en base de datos del navegador.
                     </p>
                 </div>
 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <label>
-                        Email
+                        Correo
                         <input
                             type="email"
                             name="email"
                             value={form.email}
                             onChange={handleChange}
-                            placeholder="user@mail.com"
+                            placeholder="juan_cam.ballesteros@uao.edu.co"
                         />
                     </label>
 
@@ -70,19 +72,23 @@ function LoginPage() {
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            placeholder="123"
+                            placeholder="123456"
                         />
                     </label>
 
                     <button type="submit" className="primary-button">
-                        Login
+                        Ingresar
                     </button>
                 </form>
 
                 <div className="credentials-box">
-                    <span>Demo credentials</span>
-                    <strong>user@mail.com</strong>
-                    <strong>123</strong>
+                    <span>Usuarios registrados</span>
+                    {registeredUsers.map((registeredUser) => (
+                        <div key={registeredUser.email} className="credential-row">
+                            <strong>{registeredUser.email}</strong>
+                            <small>{registeredUser.password}</small>
+                        </div>
+                    ))}
                 </div>
 
                 <p className="status-message">{message}</p>
