@@ -1,49 +1,54 @@
 # Parcial 2 - Sistema jerarquico de carpetas y archivos
 
-Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas y archivos con autenticacion real en Firebase y persistencia en Cloud Firestore.
+Profesor:
 
-La solucion no fue implementada de forma mockeada: el inicio de sesion se resolvio con `Firebase Authentication` y la persistencia del sistema jerarquico se realizo con `Cloud Firestore`.
+Le presento esta entrega del Parcial 2, desarrollada como una aplicacion web en React para gestionar un sistema jerarquico de carpetas y archivos mediante un arbol n-ario implementado desde cero.
 
-## Estudiante
+Quise dejar claro que la solucion no se realizo de forma mockeada. El inicio de sesion fue implementado con `Firebase Authentication` y la persistencia del arbol se resolvio con `Cloud Firestore`, buscando que la entrega fuera mas cercana a un escenario real de desarrollo y no solo a una simulacion local.
+
+## Datos del estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
-## Usuarios demo
+## Credenciales de acceso
 
 - `juan_cam.ballesteros@uao.edu.co` / `123456`
 - `admin@parcial.com` / `admin123`
 
-## Requisitos implementados
+## Aspectos implementados
 
-- Login con `Firebase Authentication` usando correo y contrasena.
-- Usuario autenticado en contexto global.
-- Validacion de acceso a partir de usuarios registrados en Firebase.
-- Arbol n-ario implementado desde cero.
-- Regla de negocio: los archivos no pueden tener hijos, las carpetas si.
-- Persistencia del arbol en `Cloud Firestore`.
-- Registro del correo creador en cada nodo.
-- Visualizacion jerarquica y panel de detalles con estilos CSS.
+- Autenticacion real con `Firebase Authentication`.
+- Usuario autenticado manejado mediante contexto global.
+- Validacion de acceso con usuarios registrados en Firebase.
+- Arbol n-ario construido desde cero para representar la jerarquia.
+- Regla de negocio donde los archivos no pueden tener hijos y las carpetas si.
+- Persistencia del sistema en `Cloud Firestore`.
+- Registro del correo del creador en cada carpeta o archivo.
+- Interfaz visual con estilos CSS para navegar y administrar el sistema.
 
-## Nota academica
+## Aclaracion sobre el archivo `.env`
 
-Este repositorio incluye un archivo `.env` real para que el profesor pueda ejecutar la aplicacion sin configuracion adicional.
+Profesor, dejo incluido el archivo `.env` real dentro del repositorio para que usted pueda ejecutar el proyecto directamente sin pasos extra de configuracion.
 
-Esto no es una buena practica para entornos profesionales, pero se deja asi unicamente con fines academicos y de facilidad de evaluacion.
+Soy consciente de que esto no corresponde a una buena practica en un entorno profesional. Sin embargo, en este caso lo dejo de esa manera unicamente con fines academicos y para facilitar la revision y ejecucion completa del proyecto.
 
-## Configuracion de entorno
+Tambien dejo disponible el archivo `.env.example` como referencia de la estructura de variables de entorno.
 
-- El proyecto ya incluye `.env` listo para ejecutar.
-- Si se desea replicar la configuracion en otro proyecto, se puede usar `.env.example` como referencia.
-
-## Ejecutar
+## Ejecucion del proyecto
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Validar build
+Luego puede abrir en el navegador la URL local que entregue Vite, normalmente:
+
+```bash
+http://localhost:5173
+```
+
+## Validacion de compilacion
 
 ```bash
 npm run build
