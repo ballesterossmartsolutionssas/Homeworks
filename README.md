@@ -2,6 +2,8 @@
 
 Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas y archivos con autenticacion real en Firebase y persistencia en Cloud Firestore.
 
+La solucion no fue implementada de forma mockeada: el inicio de sesion se resolvio con `Firebase Authentication` y la persistencia del sistema jerarquico se realizo con `Cloud Firestore`.
+
 ## Estudiante
 
 - Juan Camilo Ballesteros Sierra
