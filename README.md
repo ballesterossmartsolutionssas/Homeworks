@@ -23,10 +23,16 @@ Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas 
 - Registro del correo creador en cada nodo.
 - Visualizacion jerarquica y panel de detalles con estilos CSS.
 
+## Nota academica
+
+Este repositorio incluye un archivo `.env` real para que el profesor pueda ejecutar la aplicacion sin configuracion adicional.
+
+Esto no es una buena practica para entornos profesionales, pero se deja asi unicamente con fines academicos y de facilidad de evaluacion.
+
 ## Configuracion de entorno
 
-1. Copia `.env.example` a `.env`.
-2. Completa las variables `VITE_FIREBASE_*` con la configuracion de tu app web en Firebase.
+- El proyecto ya incluye `.env` listo para ejecutar.
+- Si se desea replicar la configuracion en otro proyecto, se puede usar `.env.example` como referencia.
 
 ## Ejecutar
 
