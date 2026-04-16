@@ -18,7 +18,7 @@ function DashboardPage() {
             <p className="section-copy">
                 Este panel centraliza el acceso al sistema de carpetas. Cada nodo guarda
                 su creador, respeta la jerarquia del arbol y queda persistido en la base
-                de datos del navegador.
+                de datos en Cloud Firestore.
             </p>
 
             <div className="stats-grid">
@@ -56,8 +56,8 @@ function DashboardPage() {
                 <article className="panel">
                     <p className="panel-label">Requisitos cubiertos</p>
                     <ul className="feature-list">
-                        <li>Login mock con usuarios registrados.</li>
-                        <li>Persistencia del arbol en IndexedDB.</li>
+                        <li>Login real con Firebase Authentication.</li>
+                        <li>Persistencia del arbol en Cloud Firestore.</li>
                         <li>Validacion de creador por correo electronico.</li>
                         <li>Restriccion de hijos solo para carpetas.</li>
                     </ul>

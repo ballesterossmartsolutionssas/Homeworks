@@ -8,13 +8,23 @@ const EMPTY_FORM = {
 };
 
 function LoginPage() {
-    const { login, isAuthenticated, registeredUsers } = useAuth();
+    const { login, isAuthenticated, authLoading, registeredUsers } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [form, setForm] = useState(EMPTY_FORM);
     const [message, setMessage] = useState(
-        'Ingresa con un usuario registrado para administrar el arbol.'
+        'Ingresa con un usuario creado en Firebase Authentication para administrar el arbol.'
     );
+
+    if (authLoading) {
+        return (
+            <main className="login-shell">
+                <section className="login-card">
+                    <p className="empty-state">Conectando con Firebase...</p>
+                </section>
+            </main>
+        );
+    }
 
     if (isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
@@ -30,10 +40,10 @@ function LoginPage() {
         }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const result = login(form);
+        const result = await login(form);
         setMessage(result.message);
 
         if (result.success) {
@@ -48,8 +58,8 @@ function LoginPage() {
                     <p className="eyebrow">Parcial 2</p>
                     <h1>Login del gestor jerarquico</h1>
                     <p>
-                        Aplicacion web con autenticacion mock, arbol n-ario hecho desde
-                        cero y persistencia en base de datos del navegador.
+                        Aplicacion web con Firebase Authentication, Cloud Firestore y
+                        arbol n-ario hecho desde cero.
                     </p>
                 </div>
 
@@ -82,7 +92,7 @@ function LoginPage() {
                 </form>
 
                 <div className="credentials-box">
-                    <span>Usuarios registrados</span>
+                    <span>Usuarios creados en Firebase</span>
                     {registeredUsers.map((registeredUser) => (
                         <div key={registeredUser.email} className="credential-row">
                             <strong>{registeredUser.email}</strong>

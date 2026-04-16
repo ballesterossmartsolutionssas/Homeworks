@@ -5,8 +5,8 @@ function AppLayout() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate('/login', { replace: true });
     };
 
@@ -17,7 +17,7 @@ function AppLayout() {
                     <p className="eyebrow">Parcial 2</p>
                     <h1>Sistema jerarquico de carpetas y archivos</h1>
                     <p className="topbar-copy">
-                        Arbol n-ario, autenticacion mock y persistencia en IndexedDB.
+                        Arbol n-ario, Firebase Authentication y Cloud Firestore.
                     </p>
                 </div>
 

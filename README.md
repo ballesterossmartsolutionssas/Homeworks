@@ -1,6 +1,6 @@
 # Parcial 2 - Sistema jerarquico de carpetas y archivos
 
-Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas y archivos con autenticacion y persistencia local.
+Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas y archivos con autenticacion real en Firebase y persistencia en Cloud Firestore.
 
 ## Estudiante
 
@@ -14,14 +14,19 @@ Aplicacion web desarrollada en React para gestionar un arbol n-ario de carpetas 
 
 ## Requisitos implementados
 
-- Login mock con usuarios registrados.
+- Login con `Firebase Authentication` usando correo y contrasena.
 - Usuario autenticado en contexto global.
-- Validacion de usuario registrado antes de crear carpetas o archivos.
+- Validacion de acceso a partir de usuarios registrados en Firebase.
 - Arbol n-ario implementado desde cero.
 - Regla de negocio: los archivos no pueden tener hijos, las carpetas si.
-- Persistencia del arbol en `IndexedDB`.
+- Persistencia del arbol en `Cloud Firestore`.
 - Registro del correo creador en cada nodo.
 - Visualizacion jerarquica y panel de detalles con estilos CSS.
+
+## Configuracion de entorno
+
+1. Copia `.env.example` a `.env`.
+2. Completa las variables `VITE_FIREBASE_*` con la configuracion de tu app web en Firebase.
 
 ## Ejecutar
 

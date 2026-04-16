@@ -67,7 +67,7 @@ function FileManagerPage() {
     if (isLoading) {
         return (
             <section className="page-card">
-                <p className="empty-state">Cargando arbol desde IndexedDB...</p>
+                <p className="empty-state">Cargando arbol desde Cloud Firestore...</p>
             </section>
         );
     }

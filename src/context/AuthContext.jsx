@@ -1,82 +1,95 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut
+} from 'firebase/auth';
+import { auth } from '../services/firebase';
 
 export const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'parcial-2-auth';
-const REGISTERED_USERS = [
+const DEMO_USERS = [
     {
         email: 'juan_cam.ballesteros@uao.edu.co',
-        password: '123456',
-        username: 'Juan Camilo'
+        password: '123456'
     },
     {
         email: 'admin@parcial.com',
-        password: 'admin123',
-        username: 'Administrador'
+        password: 'admin123'
     }
 ];
 
-const readStoredUser = () => {
-    const storedValue = localStorage.getItem(STORAGE_KEY);
+function mapAuthUser(firebaseUser) {
+    if (!firebaseUser) return null;
 
-    if (!storedValue) return null;
+    return {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        username: firebaseUser.displayName || firebaseUser.email.split('@')[0]
+    };
+}
 
-    try {
-        return JSON.parse(storedValue);
-    } catch {
-        return null;
-    }
-};
+function mapAuthError(error) {
+    const errorMessages = {
+        'auth/invalid-credential': 'Credenciales invalidas. Verifica correo y password.',
+        'auth/invalid-email': 'El correo no tiene un formato valido.',
+        'auth/missing-password': 'Debes ingresar la contrasena.',
+        'auth/too-many-requests': 'Demasiados intentos. Espera un momento e intenta de nuevo.'
+    };
+
+    return errorMessages[error.code] || 'No fue posible iniciar sesion con Firebase.';
+}
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(() => readStoredUser());
+    const [user, setUser] = useState(null);
+    const [authLoading, setAuthLoading] = useState(true);
 
-    const login = ({ email, password }) => {
-        const sanitizedEmail = email.trim().toLowerCase();
-        const matchedUser = REGISTERED_USERS.find(
-            (candidate) =>
-                candidate.email === sanitizedEmail && candidate.password === password
-        );
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+            setUser(mapAuthUser(firebaseUser));
+            setAuthLoading(false);
+        });
 
-        if (!matchedUser) {
+        return unsubscribe;
+    }, []);
+
+    const login = async ({ email, password }) => {
+        try {
+            const credentials = await signInWithEmailAndPassword(
+                auth,
+                email.trim().toLowerCase(),
+                password
+            );
+
+            setUser(mapAuthUser(credentials.user));
+
+            return {
+                success: true,
+                message: 'Inicio de sesion exitoso con Firebase Authentication.'
+            };
+        } catch (error) {
             return {
                 success: false,
-                message: 'Credenciales invalidas. Usa uno de los usuarios registrados.'
+                message: mapAuthError(error)
             };
         }
-
-        const authenticatedUser = {
-            email: matchedUser.email,
-            username: matchedUser.username
-        };
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(authenticatedUser));
-        setUser(authenticatedUser);
-
-        return {
-            success: true,
-            message: 'Inicio de sesion exitoso.'
-        };
     };
 
-    const logout = () => {
-        localStorage.removeItem(STORAGE_KEY);
+    const logout = async () => {
+        await signOut(auth);
         setUser(null);
     };
-
-    const isRegisteredUser = (email) =>
-        REGISTERED_USERS.some((candidate) => candidate.email === email.trim().toLowerCase());
 
     const value = useMemo(
         () => ({
             user,
+            authLoading,
             isAuthenticated: Boolean(user),
-            registeredUsers: REGISTERED_USERS,
-            isRegisteredUser,
+            registeredUsers: DEMO_USERS,
             login,
             logout
         }),
-        [user]
+        [authLoading, user]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

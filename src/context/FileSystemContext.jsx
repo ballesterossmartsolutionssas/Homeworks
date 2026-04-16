@@ -17,22 +17,34 @@ function buildNodePayload({ name, type, createdBy }) {
 }
 
 export function FileSystemProvider({ children }) {
-    const { isRegisteredUser, user } = useAuth();
+    const { user, isAuthenticated, authLoading } = useAuth();
     const [treeData, setTreeData] = useState(null);
     const [selectedNodeId, setSelectedNodeId] = useState('root');
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        if (authLoading) {
+            return undefined;
+        }
+
+        if (!isAuthenticated || !user) {
+            setTreeData(null);
+            setSelectedNodeId('root');
+            setIsLoading(false);
+            return undefined;
+        }
+
         let ignore = false;
+        setIsLoading(true);
 
         async function loadTree() {
             try {
                 const storedTree = await readStoredTree();
-                const defaultTree = createDefaultTree(user?.email).serialize();
+                const defaultTree = createDefaultTree(user.email).serialize();
                 const nextTree = storedTree ?? defaultTree;
 
                 if (!storedTree) {
-                    await saveTree(nextTree);
+                    await saveTree(nextTree, user.email);
                 }
 
                 if (!ignore) {
@@ -40,7 +52,7 @@ export function FileSystemProvider({ children }) {
                 }
             } catch {
                 if (!ignore) {
-                    setTreeData(createDefaultTree(user?.email).serialize());
+                    setTreeData(createDefaultTree(user.email).serialize());
                 }
             } finally {
                 if (!ignore) {
@@ -54,7 +66,7 @@ export function FileSystemProvider({ children }) {
         return () => {
             ignore = true;
         };
-    }, [user?.email]);
+    }, [authLoading, isAuthenticated, user]);
 
     const tree = useMemo(() => {
         if (!treeData) return null;
@@ -90,7 +102,7 @@ export function FileSystemProvider({ children }) {
     }, [tree]);
 
     const createNode = async ({ name, type, parentId }) => {
-        if (!user || !isRegisteredUser(user.email)) {
+        if (!user) {
             return {
                 success: false,
                 message: 'Debes iniciar sesion con un usuario registrado para crear elementos.'
@@ -118,11 +130,11 @@ export function FileSystemProvider({ children }) {
             const serializedTree = nextTree.serialize();
             setTreeData(serializedTree);
             setSelectedNodeId(newNode.id);
-            await saveTree(serializedTree);
+            await saveTree(serializedTree, user.email);
 
             return {
                 success: true,
-                message: `${type === 'folder' ? 'Carpeta' : 'Archivo'} creado correctamente.`
+                message: `${type === 'folder' ? 'Carpeta' : 'Archivo'} creado correctamente en Firestore.`
             };
         } catch (error) {
             return {
@@ -141,7 +153,7 @@ export function FileSystemProvider({ children }) {
             const serializedTree = nextTree.serialize();
             setTreeData(serializedTree);
             setSelectedNodeId(parentNode?.id ?? 'root');
-            await saveTree(serializedTree);
+            await saveTree(serializedTree, user?.email ?? 'sistema');
 
             return {
                 success: true,
