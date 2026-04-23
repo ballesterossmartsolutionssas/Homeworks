@@ -1,55 +1,46 @@
-# Parcial 2 - Sistema jerarquico de carpetas y archivos
+# Challenge 10 - Graphs
 
-Profesor:
+Aplicacion en React para crear y administrar un grafo de amigos y ciudades usando una estructura `Graph` implementada manualmente y visualizada con `react-d3-graph`.
 
-Le presento esta entrega del Parcial 2, desarrollada como una aplicacion web en React para gestionar un sistema jerarquico de carpetas y archivos mediante un arbol n-ario implementado desde cero.
-
-Quise dejar claro que la solucion no se realizo de forma mockeada. El inicio de sesion fue implementado con `Firebase Authentication` y la persistencia del arbol se resolvio con `Cloud Firestore`, buscando que la entrega fuera mas cercana a un escenario real de desarrollo y no solo a una simulacion local.
-
-## Datos del estudiante
+## Estudiante
 
 - Juan Camilo Ballesteros Sierra
 - Codigo: 2230721
 
-## Credenciales de acceso
+## Requisitos implementados
 
-- `juan_cam.ballesteros@uao.edu.co` / `123456`
-- `admin@parcial.com` / `admin123`
+- Cada persona es un nodo del grafo.
+- Cada ciudad tambien es un nodo del grafo.
+- Cada persona tiene nombre, edad y referencia a una ciudad.
+- Cada ciudad tiene nombre.
+- Formulario para agregar nuevas ciudades.
+- Formulario para agregar nuevas personas conectadas con su ciudad.
+- Formulario para crear relaciones de amistad entre personas.
+- Impresion en pantalla de las personas que viven en una ciudad seleccionada.
+- Visualizacion interactiva del grafo con `react-d3-graph`.
+- Lista de adyacencia para mostrar la representacion interna del grafo.
 
-## Aspectos implementados
+## Estructura usada
 
-- Autenticacion real con `Firebase Authentication`.
-- Usuario autenticado manejado mediante contexto global.
-- Validacion de acceso con usuarios registrados en Firebase.
-- Arbol n-ario construido desde cero para representar la jerarquia.
-- Regla de negocio donde los archivos no pueden tener hijos y las carpetas si.
-- Persistencia del sistema en `Cloud Firestore`.
-- Registro del correo del creador en cada carpeta o archivo.
-- Interfaz visual con estilos CSS para navegar y administrar el sistema.
+- `src/structures/friendsCitiesGraph.js`: implementacion del grafo con nodos, aristas, lista de adyacencia, busqueda y filtros por ciudad.
+- `src/App.jsx`: interfaz principal, formularios, listado por ciudad y componente `Graph`.
+- `src/index.css`: estilos de la entrega.
 
-## Aclaracion sobre el archivo `.env`
+## Ejecucion local
 
-Profesor, dejo incluido el archivo `.env` real dentro del repositorio para que usted pueda ejecutar el proyecto directamente sin pasos extra de configuracion.
+1. Instalar dependencias:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+2. Iniciar en desarrollo:
+   ```bash
+   npm run dev
+   ```
+3. Compilar para validar:
+   ```bash
+   npm run build
+   ```
 
-Soy consciente de que esto no corresponde a una buena practica en un entorno profesional. Sin embargo, en este caso lo dejo de esa manera unicamente con fines academicos y para facilitar la revision y ejecucion completa del proyecto.
+## Nota sobre la dependencia
 
-Tambien dejo disponible el archivo `.env.example` como referencia de la estructura de variables de entorno.
-
-## Ejecucion del proyecto
-
-```bash
-npm install
-npm run dev
-```
-
-Luego puede abrir en el navegador la URL local que entregue Vite, normalmente:
-
-```bash
-http://localhost:5173
-```
-
-## Validacion de compilacion
-
-```bash
-npm run build
-```
+`react-d3-graph` declara un peer dependency antiguo para React. Por eso la instalacion se debe ejecutar con `--legacy-peer-deps` en este proyecto.
