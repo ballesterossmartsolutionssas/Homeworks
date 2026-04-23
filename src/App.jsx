@@ -320,7 +320,7 @@ function App() {
                                 {peopleInSelectedCity.map((person) => (
                                     <li key={person.id}>
                                         <strong>{person.name}</strong>
-                                        <span>{person.age} anos</span>
+                                        <span>{person.age} años</span>
                                     </li>
                                 ))}
                             </ul>
