@@ -161,7 +161,7 @@ function App() {
                     <h1>Grafo de amigos y ciudades</h1>
                     <p className="hero-copy">
                         Cada persona y cada ciudad es un nodo. Las aristas conectan a las
-                        personas con su ciudad y tambien representan relaciones de amistad.
+                        personas con su ciudad y también representan relaciones de amistad.
                     </p>
                 </div>
 
@@ -184,7 +184,7 @@ function App() {
             <section className="workspace-grid">
                 <aside className="control-panel">
                     <div className="panel-heading">
-                        <p className="eyebrow">Gestion</p>
+                        <p className="eyebrow">Gestión</p>
                         <h2>Crear nodos y relaciones</h2>
                     </div>
 
@@ -211,7 +211,7 @@ function App() {
                                 name="name"
                                 value={personForm.name}
                                 onChange={handlePersonFormChange}
-                                placeholder="Ej: Sofia"
+                                placeholder="Ej: Sofía"
                             />
                         </label>
                         <label>
@@ -280,7 +280,7 @@ function App() {
 
                 <section className="graph-card">
                     <div className="panel-heading">
-                        <p className="eyebrow">Visualizacion</p>
+                        <p className="eyebrow">Visualización</p>
                         <h2>react-d3-graph</h2>
                     </div>
 
@@ -361,7 +361,7 @@ function App() {
                 <article className="result-card adjacency-card">
                     <div className="panel-heading compact">
                         <p className="eyebrow">Lista de adyacencia</p>
-                        <h2>Representacion interna</h2>
+                        <h2>Representación interna</h2>
                     </div>
 
                     <ul className="adjacency-list">

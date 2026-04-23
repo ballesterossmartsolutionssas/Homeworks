@@ -67,13 +67,13 @@ export class FriendsCitiesGraph {
         }
 
         if (!Number.isInteger(age) || age <= 0) {
-            throw new Error('La edad debe ser un numero entero mayor que cero.');
+            throw new Error('La edad debe ser un número entero mayor que cero.');
         }
 
         const city = this.findNode(cityId);
 
         if (!city || city.type !== 'city') {
-            throw new Error('La persona debe estar referenciada a una ciudad valida.');
+            throw new Error('La persona debe estar referenciada a una ciudad válida.');
         }
 
         const duplicatedPerson = this.getPeople().some(
@@ -133,7 +133,7 @@ export class FriendsCitiesGraph {
         const duplicatedEdge = this.edges.some((edge) => edge.hasSameEnds(source, target));
 
         if (duplicatedEdge) {
-            throw new Error('Esa relacion ya existe en el grafo.');
+            throw new Error('Esa relación ya existe en el grafo.');
         }
 
         const edge = new GraphEdge(source, target, type);
@@ -220,14 +220,14 @@ export class FriendsCitiesGraph {
 
 export function createInitialFriendsCitiesGraph() {
     return createFriendsCitiesGraph({
-        cities: ['Cali', 'Bogota', 'Medellin', 'Barranquilla'],
+        cities: ['Cali', 'Bogotá', 'Medellín', 'Barranquilla'],
         people: [
             { name: 'Camila', age: 22, cityName: 'Cali' },
             { name: 'Mateo', age: 24, cityName: 'Cali' },
-            { name: 'Laura', age: 21, cityName: 'Bogota' },
-            { name: 'Daniel', age: 26, cityName: 'Medellin' },
+            { name: 'Laura', age: 21, cityName: 'Bogotá' },
+            { name: 'Daniel', age: 26, cityName: 'Medellín' },
             { name: 'Valentina', age: 23, cityName: 'Barranquilla' },
-            { name: 'Juan', age: 25, cityName: 'Bogota' }
+            { name: 'Juan', age: 25, cityName: 'Bogotá' }
         ],
         friendships: [
             ['Camila', 'Mateo'],
