@@ -1,182 +1,92 @@
 import { useMemo, useState } from 'react';
-import { Graph } from 'react-d3-graph';
-import { createInitialFriendsCitiesGraph } from './structures/friendsCitiesGraph';
-
-const graphConfig = {
-    directed: false,
-    height: 540,
-    width: 760,
-    nodeHighlightBehavior: true,
-    staticGraphWithDragAndDrop: true,
-    maxZoom: 8,
-    minZoom: 0.35,
-    d3: {
-        gravity: -360,
-        linkLength: 170
-    },
-    node: {
-        fontColor: '#1f2937',
-        fontSize: 13,
-        fontWeight: '700',
-        highlightFontSize: 15,
-        highlightStrokeColor: '#f97316',
-        labelProperty: 'label',
-        mouseCursor: 'pointer',
-        renderLabel: true,
-        size: 680,
-        strokeColor: '#ffffff',
-        strokeWidth: 2
-    },
-    link: {
-        color: '#9ca3af',
-        highlightColor: '#f97316',
-        strokeWidth: 2
-    }
-};
+import { ProductSearchEngine, createInitialSearchEngine } from './structures/productSearchEngine';
 
 function App() {
-    const [graph, setGraph] = useState(() => createInitialFriendsCitiesGraph());
-    const [selectedCityId, setSelectedCityId] = useState('city-cali');
-    const [selectedNodeId, setSelectedNodeId] = useState(null);
-    const [cityName, setCityName] = useState('');
-    const [personForm, setPersonForm] = useState({
+    const [engine, setEngine] = useState(() => createInitialSearchEngine());
+    const [productForm, setProductForm] = useState({
         name: '',
-        age: '',
-        cityId: 'city-cali'
+        popularity: ''
     });
-    const [friendshipForm, setFriendshipForm] = useState({
-        firstPersonId: 'person-camila',
-        secondPersonId: 'person-juan'
+    const [searchForm, setSearchForm] = useState({
+        prefix: 'air',
+        limit: 2
     });
-    const [message, setMessage] = useState('Grafo inicial cargado con personas, ciudades y amistades.');
+    const [message, setMessage] = useState(
+        'Products loaded in the Trie. Search a prefix to calculate the Top K with the Heap.'
+    );
 
-    const cities = graph.getCities();
-    const people = graph.getPeople();
-    const selectedCity = graph.findNode(selectedCityId);
-    const selectedNode = selectedNodeId ? graph.findNode(selectedNodeId) : null;
-    const peopleInSelectedCity = selectedCityId ? graph.getPeopleByCity(selectedCityId) : [];
-    const graphData = useMemo(() => graph.toD3Data(), [graph]);
-    const adjacencyRows = graph.printAdjacencyList();
+    const products = engine.getAllProducts();
+    const trieRows = engine.getTrieRows();
+    const matches = useMemo(
+        () => engine.searchByPrefix(searchForm.prefix),
+        [engine, searchForm.prefix]
+    );
+    const topResults = useMemo(
+        () => engine.searchTopK(searchForm.prefix, Number(searchForm.limit)),
+        [engine, searchForm.prefix, searchForm.limit]
+    );
+    const topPopularity = Math.max(...products.map((product) => product.popularity), 1);
 
-    const updateGraph = (callback, successMessage) => {
+    const handleProductChange = (event) => {
+        const { name, value } = event.target;
+
+        setProductForm((currentForm) => ({
+            ...currentForm,
+            [name]: value
+        }));
+    };
+
+    const handleSearchChange = (event) => {
+        const { name, value } = event.target;
+
+        setSearchForm((currentForm) => ({
+            ...currentForm,
+            [name]: value
+        }));
+    };
+
+    const handleInsertProduct = (event) => {
+        event.preventDefault();
+
         try {
-            const nextGraph = graph.clone();
-            callback(nextGraph);
-            setGraph(nextGraph);
-            setMessage(successMessage);
+            const nextEngine = new ProductSearchEngine(products);
+            const product = nextEngine.insert(productForm.name, Number(productForm.popularity));
+            setEngine(nextEngine);
+            setProductForm({ name: '', popularity: '' });
+            setSearchForm((currentForm) => ({
+                ...currentForm,
+                prefix: product.name.split(' ')[0]
+            }));
+            setMessage(`Inserted "${product.name}" with popularity ${product.popularity}.`);
         } catch (error) {
             setMessage(error.message);
         }
     };
 
-    const handleCreateCity = (event) => {
-        event.preventDefault();
-
-        updateGraph(
-            (nextGraph) => {
-                const createdCity = nextGraph.addCity(cityName);
-                setSelectedCityId(createdCity.id);
-                setPersonForm((currentForm) => ({
-                    ...currentForm,
-                    cityId: createdCity.id
-                }));
-                setCityName('');
-            },
-            'Ciudad agregada al grafo.'
-        );
-    };
-
-    const handleCreatePerson = (event) => {
-        event.preventDefault();
-
-        updateGraph(
-            (nextGraph) => {
-                const createdPerson = nextGraph.addPerson({
-                    name: personForm.name,
-                    age: Number(personForm.age),
-                    cityId: personForm.cityId
-                });
-                setFriendshipForm((currentForm) => ({
-                    firstPersonId: currentForm.firstPersonId || createdPerson.id,
-                    secondPersonId: createdPerson.id
-                }));
-                setPersonForm((currentForm) => ({
-                    ...currentForm,
-                    name: '',
-                    age: ''
-                }));
-            },
-            'Persona agregada y conectada con su ciudad.'
-        );
-    };
-
-    const handleCreateFriendship = (event) => {
-        event.preventDefault();
-
-        updateGraph(
-            (nextGraph) => {
-                nextGraph.addFriendship(
-                    friendshipForm.firstPersonId,
-                    friendshipForm.secondPersonId
-                );
-            },
-            'Amistad agregada entre personas.'
-        );
-    };
-
-    const handleSelectCity = (event) => {
-        setSelectedCityId(event.target.value);
-    };
-
-    const handlePersonFormChange = (event) => {
-        const { name, value } = event.target;
-        setPersonForm((currentForm) => ({
-            ...currentForm,
-            [name]: value
-        }));
-    };
-
-    const handleFriendshipFormChange = (event) => {
-        const { name, value } = event.target;
-        setFriendshipForm((currentForm) => ({
-            ...currentForm,
-            [name]: value
-        }));
-    };
-
-    const handleNodeClick = (nodeId) => {
-        setSelectedNodeId(nodeId);
-        const node = graph.findNode(nodeId);
-
-        if (node?.type === 'city') {
-            setSelectedCityId(node.id);
-        }
-    };
-
     return (
         <main className="app-shell">
-            <section className="hero-card">
+            <section className="hero-section">
                 <div>
-                    <p className="eyebrow">Challenge 10</p>
-                    <h1>Grafo de amigos y ciudades</h1>
+                    <p className="eyebrow">Challenge 11</p>
+                    <h1>Smart Search Engine</h1>
                     <p className="hero-copy">
-                        Cada persona y cada ciudad es un nodo. Las aristas conectan a las
-                        personas con su ciudad y también representan relaciones de amistad.
+                        Product names are stored in a Trie. Prefix matches are ranked with a
+                        Max Heap to return the most popular results first.
                     </p>
                 </div>
 
-                <div className="hero-stats" aria-label="Resumen del grafo">
+                <div className="hero-metrics" aria-label="Search engine summary">
                     <article>
-                        <span>Personas</span>
-                        <strong>{people.length}</strong>
+                        <span>Products</span>
+                        <strong>{products.length}</strong>
                     </article>
                     <article>
-                        <span>Ciudades</span>
-                        <strong>{cities.length}</strong>
+                        <span>Trie nodes</span>
+                        <strong>{trieRows.length}</strong>
                     </article>
                     <article>
-                        <span>Aristas</span>
-                        <strong>{graph.getEdges().length}</strong>
+                        <span>Matches</span>
+                        <strong>{matches.length}</strong>
                     </article>
                 </div>
             </section>
@@ -184,191 +94,152 @@ function App() {
             <section className="workspace-grid">
                 <aside className="control-panel">
                     <div className="panel-heading">
-                        <p className="eyebrow">Gestión</p>
-                        <h2>Crear nodos y relaciones</h2>
+                        <p className="eyebrow">Trie insert</p>
+                        <h2>Add product</h2>
                     </div>
 
-                    <form className="graph-form" onSubmit={handleCreateCity}>
-                        <h3>Nueva ciudad</h3>
+                    <form className="engine-form" onSubmit={handleInsertProduct}>
                         <label>
-                            Nombre de la ciudad
-                            <input
-                                type="text"
-                                value={cityName}
-                                onChange={(event) => setCityName(event.target.value)}
-                                placeholder="Ej: Pereira"
-                            />
-                        </label>
-                        <button type="submit">Agregar ciudad</button>
-                    </form>
-
-                    <form className="graph-form" onSubmit={handleCreatePerson}>
-                        <h3>Nueva persona</h3>
-                        <label>
-                            Nombre
+                            Product name
                             <input
                                 type="text"
                                 name="name"
-                                value={personForm.name}
-                                onChange={handlePersonFormChange}
-                                placeholder="Ej: Sofía"
+                                value={productForm.name}
+                                onChange={handleProductChange}
+                                placeholder="Example: air zoom"
                             />
                         </label>
+
                         <label>
-                            Edad
+                            Popularity
                             <input
                                 type="number"
-                                name="age"
-                                min="1"
-                                value={personForm.age}
-                                onChange={handlePersonFormChange}
-                                placeholder="Ej: 21"
+                                name="popularity"
+                                min="0"
+                                step="1"
+                                value={productForm.popularity}
+                                onChange={handleProductChange}
+                                placeholder="Example: 89"
                             />
                         </label>
-                        <label>
-                            Ciudad
-                            <select
-                                name="cityId"
-                                value={personForm.cityId}
-                                onChange={handlePersonFormChange}
-                            >
-                                {cities.map((city) => (
-                                    <option key={city.id} value={city.id}>
-                                        {city.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <button type="submit">Agregar persona</button>
+
+                        <button type="submit">Insert product</button>
                     </form>
 
-                    <form className="graph-form" onSubmit={handleCreateFriendship}>
-                        <h3>Nueva amistad</h3>
+                    <div className="panel-heading search-heading">
+                        <p className="eyebrow">Prefix search</p>
+                        <h2>Search Top K</h2>
+                    </div>
+
+                    <form className="engine-form search-form">
                         <label>
-                            Primera persona
-                            <select
-                                name="firstPersonId"
-                                value={friendshipForm.firstPersonId}
-                                onChange={handleFriendshipFormChange}
-                            >
-                                {people.map((person) => (
-                                    <option key={person.id} value={person.id}>
-                                        {person.name}
-                                    </option>
-                                ))}
-                            </select>
+                            Prefix
+                            <input
+                                type="text"
+                                name="prefix"
+                                value={searchForm.prefix}
+                                onChange={handleSearchChange}
+                                placeholder="air"
+                            />
                         </label>
+
                         <label>
-                            Segunda persona
-                            <select
-                                name="secondPersonId"
-                                value={friendshipForm.secondPersonId}
-                                onChange={handleFriendshipFormChange}
-                            >
-                                {people.map((person) => (
-                                    <option key={person.id} value={person.id}>
-                                        {person.name}
-                                    </option>
-                                ))}
-                            </select>
+                            Top K
+                            <input
+                                type="number"
+                                name="limit"
+                                min="1"
+                                max="10"
+                                step="1"
+                                value={searchForm.limit}
+                                onChange={handleSearchChange}
+                            />
                         </label>
-                        <button type="submit">Conectar amigos</button>
                     </form>
 
                     <p className="status-message">{message}</p>
                 </aside>
 
-                <section className="graph-card">
+                <section className="results-panel">
                     <div className="panel-heading">
-                        <p className="eyebrow">Visualización</p>
-                        <h2>react-d3-graph</h2>
+                        <p className="eyebrow">Max Heap result</p>
+                        <h2>Top products for "{searchForm.prefix || 'all'}"</h2>
                     </div>
 
-                    <div className="graph-frame">
-                        <Graph
-                            id="friends-cities-graph"
-                            data={graphData}
-                            config={graphConfig}
-                            onClickNode={handleNodeClick}
-                        />
-                    </div>
+                    {topResults.length > 0 ? (
+                        <ol className="top-results">
+                            {topResults.map((product, index) => (
+                                <li key={product.name}>
+                                    <span className="rank">{index + 1}</span>
+                                    <div>
+                                        <strong>{product.name}</strong>
+                                        <span>Popularity {product.popularity}</span>
+                                    </div>
+                                    <meter min="0" max={topPopularity} value={product.popularity}>
+                                        {product.popularity}
+                                    </meter>
+                                </li>
+                            ))}
+                        </ol>
+                    ) : (
+                        <p className="empty-copy">No products match that prefix.</p>
+                    )}
                 </section>
             </section>
 
             <section className="details-grid">
-                <article className="result-card">
+                <article className="data-panel">
                     <div className="panel-heading compact">
-                        <p className="eyebrow">Print</p>
-                        <h2>Personas por ciudad</h2>
+                        <p className="eyebrow">Stored products</p>
+                        <h2>Trie words</h2>
                     </div>
 
-                    <label className="filter-label">
-                        Ciudad consultada
-                        <select value={selectedCityId} onChange={handleSelectCity}>
-                            {cities.map((city) => (
-                                <option key={city.id} value={city.id}>
-                                    {city.name}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-
-                    <div className="city-result">
-                        <h3>{selectedCity?.name}</h3>
-                        {peopleInSelectedCity.length > 0 ? (
-                            <ul>
-                                {peopleInSelectedCity.map((person) => (
-                                    <li key={person.id}>
-                                        <strong>{person.name}</strong>
-                                        <span>{person.age} años</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No hay personas registradas en esta ciudad.</p>
-                        )}
-                    </div>
+                    <ul className="product-list">
+                        {products.map((product) => (
+                            <li key={product.name}>
+                                <strong>{product.name}</strong>
+                                <span>{product.popularity}</span>
+                            </li>
+                        ))}
+                    </ul>
                 </article>
 
-                <article className="result-card">
+                <article className="data-panel">
                     <div className="panel-heading compact">
-                        <p className="eyebrow">Nodo seleccionado</p>
-                        <h2>Detalle</h2>
+                        <p className="eyebrow">Prefix matches</p>
+                        <h2>Before heap ranking</h2>
                     </div>
 
-                    {selectedNode ? (
-                        <div className="node-detail">
-                            <span className={`node-badge ${selectedNode.type}`}>
-                                {selectedNode.type === 'city' ? 'Ciudad' : 'Persona'}
-                            </span>
-                            <h3>{selectedNode.name}</h3>
-                            {selectedNode.type === 'person' && (
-                                <p>
-                                    Edad: <strong>{selectedNode.age}</strong> | Ciudad:{' '}
-                                    <strong>{graph.findNode(selectedNode.cityId)?.name}</strong>
-                                </p>
-                            )}
-                            <p>
-                                Conexiones:{' '}
-                                <strong>{graph.getAdjacentNodes(selectedNode.id).length}</strong>
-                            </p>
-                        </div>
-                    ) : (
-                        <p className="empty-copy">Haz clic en un nodo del grafo para ver su detalle.</p>
-                    )}
+                    <ul className="match-list">
+                        {matches.map((product) => (
+                            <li key={product.name}>
+                                <span>{product.name}</span>
+                                <strong>{product.popularity}</strong>
+                            </li>
+                        ))}
+                    </ul>
                 </article>
 
-                <article className="result-card adjacency-card">
+                <article className="data-panel trie-panel">
                     <div className="panel-heading compact">
-                        <p className="eyebrow">Lista de adyacencia</p>
-                        <h2>Representación interna</h2>
+                        <p className="eyebrow">Trie traversal</p>
+                        <h2>Nodes and paths</h2>
                     </div>
 
-                    <ul className="adjacency-list">
-                        {adjacencyRows.map((row) => (
-                            <li key={row.id}>
-                                <strong>{row.name}</strong>
-                                <span>{row.connections.join(', ') || 'Sin conexiones'}</span>
+                    <ul className="trie-list">
+                        {trieRows.map((row) => (
+                            <li key={row.id} style={{ '--depth': row.depth }}>
+                                <span className={row.isEndOfWord ? 'node-letter end-word' : 'node-letter'}>
+                                    {row.letter === ' ' ? 'space' : row.letter}
+                                </span>
+                                <strong>{row.prefix}</strong>
+                                <small>
+                                    {row.children.length > 0
+                                        ? `children: ${row.children
+                                              .map((letter) => (letter === ' ' ? 'space' : letter))
+                                              .join(', ')}`
+                                        : 'leaf node'}
+                                </small>
                             </li>
                         ))}
                     </ul>

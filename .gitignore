@@ -1,6 +1,7 @@
 node_modules/
 .vite/
 dist/
+tmp/
 .env
 .env.local
 .env.*.local

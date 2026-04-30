@@ -1,46 +1,38 @@
-# Challenge 10 - Graphs
+# Challenge 11 - Tries and Heaps
 
-Aplicación en React para crear y administrar un grafo de amigos y ciudades usando una estructura `Graph` implementada manualmente y visualizada con `react-d3-graph`.
+React application for a smart product search engine. Product names are stored in a Trie and prefix search results are ranked with a Max Heap to return the Top K most popular products.
 
-## Estudiante
+## Student
 
 - Juan Camilo Ballesteros Sierra
-- Código: 2230721
+- Code: 2230721
 
-## Requisitos implementados
+## Implemented requirements
 
-- Cada persona es un nodo del grafo.
-- Cada ciudad también es un nodo del grafo.
-- Cada persona tiene nombre, edad y referencia a una ciudad.
-- Cada ciudad tiene nombre.
-- Formulario para agregar nuevas ciudades.
-- Formulario para agregar nuevas personas conectadas con su ciudad.
-- Formulario para crear relaciones de amistad entre personas.
-- Impresión en pantalla de las personas que viven en una ciudad seleccionada.
-- Visualización interactiva del grafo con `react-d3-graph`.
-- Lista de adyacencia para mostrar la representación interna del grafo.
+- Products are inserted in a Trie with `name` and `popularity`.
+- Search supports prefixes such as `air`, `adi`, or `new`.
+- `searchTopK(prefix, k)` returns the most popular products for the prefix.
+- A Max Heap ranks results by popularity.
+- The UI allows inserting or updating products.
+- The UI shows all stored products, prefix matches before ranking, Top K results, and a Trie traversal.
 
-## Estructura usada
+## Main structure
 
-- `src/structures/friendsCitiesGraph.js`: implementación del grafo con nodos, aristas, lista de adyacencia, búsqueda y filtros por ciudad.
-- `src/App.jsx`: interfaz principal, formularios, listado por ciudad y componente `Graph`.
-- `src/index.css`: estilos de la entrega.
+- `src/structures/productSearchEngine.js`: `TrieNode`, `ProductSearchEngine`, and `MaxHeap` implementation.
+- `src/App.jsx`: main interface for inserting products and running prefix searches.
+- `src/index.css`: styling for the challenge.
 
-## Ejecución local
+## Local execution
 
-1. Instalar dependencias:
+1. Install dependencies:
    ```bash
-   npm install --legacy-peer-deps
+   npm install
    ```
-2. Iniciar en desarrollo:
+2. Start development server:
    ```bash
    npm run dev
    ```
-3. Compilar para validar:
+3. Validate production build:
    ```bash
    npm run build
    ```
-
-## Nota sobre la dependencia
-
-`react-d3-graph` declara un peer dependency antiguo para React. Por eso la instalación se debe ejecutar con `--legacy-peer-deps` en este proyecto.
