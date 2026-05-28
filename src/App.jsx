@@ -1,36 +1,52 @@
 import { useMemo, useState } from 'react';
-import { ProductSearchEngine, createInitialSearchEngine } from './structures/productSearchEngine';
+import { MusicPlatform, createInitialMusicPlatform } from './structures/musicPlatform';
 
 function App() {
-    const [engine, setEngine] = useState(() => createInitialSearchEngine());
-    const [productForm, setProductForm] = useState({
-        name: '',
-        popularity: ''
+    const [platform, setPlatform] = useState(() => createInitialMusicPlatform());
+    const [songForm, setSongForm] = useState({
+        title: '',
+        artist: '',
+        genre: '',
+        plays: '',
+        related: ''
     });
     const [searchForm, setSearchForm] = useState({
-        prefix: 'air',
-        limit: 2
+        prefix: 'al',
+        limit: 3,
+        exactTitle: 'Algebra Flow'
     });
+    const [selectedSong, setSelectedSong] = useState('Algebra Flow');
     const [message, setMessage] = useState(
-        'Products loaded in the Trie. Search a prefix to calculate the Top K with the Heap.'
+        'Songs are stored in the Trie, ranked with a Max Heap, and connected through an undirected graph.'
     );
 
-    const products = engine.getAllProducts();
-    const trieRows = engine.getTrieRows();
-    const matches = useMemo(
-        () => engine.searchByPrefix(searchForm.prefix),
-        [engine, searchForm.prefix]
+    const songs = platform.getAllSongs();
+    const trieRows = platform.getTrieRows();
+    const adjacencyRows = platform.getAdjacencyRows();
+    const graphEdges = platform.getGraphEdges();
+    const suggestions = useMemo(
+        () => platform.getSuggestions(searchForm.prefix),
+        [platform, searchForm.prefix]
     );
-    const topResults = useMemo(
-        () => engine.searchTopK(searchForm.prefix, Number(searchForm.limit)),
-        [engine, searchForm.prefix, searchForm.limit]
+    const prefixTopSongs = useMemo(
+        () => platform.searchTopK(searchForm.prefix, Number(searchForm.limit)),
+        [platform, searchForm.prefix, searchForm.limit]
     );
-    const topPopularity = Math.max(...products.map((product) => product.popularity), 1);
+    const globalTopSongs = useMemo(() => platform.getTopSongs(5), [platform]);
+    const recommendations = useMemo(
+        () => platform.getRecommendations(selectedSong),
+        [platform, selectedSong]
+    );
+    const exactExists = useMemo(
+        () => platform.songExists(searchForm.exactTitle),
+        [platform, searchForm.exactTitle]
+    );
+    const highestPlayCount = Math.max(...songs.map((song) => song.plays), 1);
 
-    const handleProductChange = (event) => {
+    const handleSongChange = (event) => {
         const { name, value } = event.target;
 
-        setProductForm((currentForm) => ({
+        setSongForm((currentForm) => ({
             ...currentForm,
             [name]: value
         }));
@@ -45,19 +61,39 @@ function App() {
         }));
     };
 
-    const handleInsertProduct = (event) => {
+    const handleInsertSong = (event) => {
         event.preventDefault();
 
         try {
-            const nextEngine = new ProductSearchEngine(products);
-            const product = nextEngine.insert(productForm.name, Number(productForm.popularity));
-            setEngine(nextEngine);
-            setProductForm({ name: '', popularity: '' });
+            const nextPlatform = new MusicPlatform(songs, graphEdges);
+            const song = nextPlatform.insertSong(
+                songForm.title,
+                Number(songForm.plays),
+                songForm.artist,
+                songForm.genre
+            );
+            const relatedTitles = songForm.related
+                .split(',')
+                .map((title) => title.trim())
+                .filter(Boolean);
+
+            relatedTitles.forEach((relatedTitle) => nextPlatform.connectSongs(song.title, relatedTitle));
+
+            setPlatform(nextPlatform);
+            setSongForm({
+                title: '',
+                artist: '',
+                genre: '',
+                plays: '',
+                related: ''
+            });
             setSearchForm((currentForm) => ({
                 ...currentForm,
-                prefix: product.name.split(' ')[0]
+                prefix: song.title.slice(0, 2),
+                exactTitle: song.title
             }));
-            setMessage(`Inserted "${product.name}" with popularity ${product.popularity}.`);
+            setSelectedSong(song.title);
+            setMessage(`Inserted "${song.title}" and connected ${relatedTitles.length} recommendation(s).`);
         } catch (error) {
             setMessage(error.message);
         }
@@ -66,27 +102,27 @@ function App() {
     return (
         <main className="app-shell">
             <section className="hero-section">
-                <div>
-                    <p className="eyebrow">Challenge 11</p>
-                    <h1>Smart Search Engine</h1>
-                    <p className="hero-copy">
-                        Product names are stored in a Trie. Prefix matches are ranked with a
-                        Max Heap to return the most popular results first.
+                <div className="hero-copy">
+                    <p className="eyebrow">Parcial 3</p>
+                    <h1>Spotify Learning Dashboard</h1>
+                    <p>
+                        Predictive song search with a Trie, popularity rankings with a Max Heap,
+                        and related-song recommendations with an undirected graph.
                     </p>
                 </div>
 
-                <div className="hero-metrics" aria-label="Search engine summary">
+                <div className="hero-metrics" aria-label="Music platform summary">
                     <article>
-                        <span>Products</span>
-                        <strong>{products.length}</strong>
+                        <span>Songs</span>
+                        <strong>{songs.length}</strong>
                     </article>
                     <article>
                         <span>Trie nodes</span>
                         <strong>{trieRows.length}</strong>
                     </article>
                     <article>
-                        <span>Matches</span>
-                        <strong>{matches.length}</strong>
+                        <span>Graph edges</span>
+                        <strong>{graphEdges.length}</strong>
                     </article>
                 </div>
             </section>
@@ -95,66 +131,70 @@ function App() {
                 <aside className="control-panel">
                     <div className="panel-heading">
                         <p className="eyebrow">Trie insert</p>
-                        <h2>Add product</h2>
+                        <h2>Add educational song</h2>
                     </div>
 
-                    <form className="engine-form" onSubmit={handleInsertProduct}>
+                    <form className="dashboard-form" onSubmit={handleInsertSong}>
                         <label>
-                            Product name
+                            Song title
                             <input
                                 type="text"
-                                name="name"
-                                value={productForm.name}
-                                onChange={handleProductChange}
-                                placeholder="Example: air zoom"
+                                name="title"
+                                value={songForm.title}
+                                onChange={handleSongChange}
+                                placeholder="Example: Chemistry Chill"
                             />
                         </label>
 
                         <label>
-                            Popularity
-                            <input
-                                type="number"
-                                name="popularity"
-                                min="0"
-                                step="1"
-                                value={productForm.popularity}
-                                onChange={handleProductChange}
-                                placeholder="Example: 89"
-                            />
-                        </label>
-
-                        <button type="submit">Insert product</button>
-                    </form>
-
-                    <div className="panel-heading search-heading">
-                        <p className="eyebrow">Prefix search</p>
-                        <h2>Search Top K</h2>
-                    </div>
-
-                    <form className="engine-form search-form">
-                        <label>
-                            Prefix
+                            Artist
                             <input
                                 type="text"
-                                name="prefix"
-                                value={searchForm.prefix}
-                                onChange={handleSearchChange}
-                                placeholder="air"
+                                name="artist"
+                                value={songForm.artist}
+                                onChange={handleSongChange}
+                                placeholder="Example: Science Lab"
                             />
                         </label>
 
+                        <div className="form-row">
+                            <label>
+                                Genre
+                                <input
+                                    type="text"
+                                    name="genre"
+                                    value={songForm.genre}
+                                    onChange={handleSongChange}
+                                    placeholder="Science"
+                                />
+                            </label>
+
+                            <label>
+                                Plays
+                                <input
+                                    type="number"
+                                    name="plays"
+                                    min="0"
+                                    step="1"
+                                    value={songForm.plays}
+                                    onChange={handleSongChange}
+                                    placeholder="920"
+                                />
+                            </label>
+                        </div>
+
                         <label>
-                            Top K
+                            Related songs
                             <input
-                                type="number"
-                                name="limit"
-                                min="1"
-                                max="10"
-                                step="1"
-                                value={searchForm.limit}
-                                onChange={handleSearchChange}
+                                type="text"
+                                name="related"
+                                value={songForm.related}
+                                onChange={handleSongChange}
+                                placeholder="Algebra Flow, Physics Waves"
                             />
                         </label>
+
+                        <button type="submit">Insert song</button>
                     </form>
 
                     <p className="status-message">{message}</p>
@@ -162,59 +202,122 @@ function App() {
 
                 <section className="results-panel">
                     <div className="panel-heading">
-                        <p className="eyebrow">Max Heap result</p>
-                        <h2>Top products for "{searchForm.prefix || 'all'}"</h2>
+                        <p className="eyebrow">Max Heap</p>
+                        <h2>Top songs in the platform</h2>
                     </div>
 
-                    {topResults.length > 0 ? (
-                        <ol className="top-results">
-                            {topResults.map((product, index) => (
-                                <li key={product.name}>
-                                    <span className="rank">{index + 1}</span>
-                                    <div>
-                                        <strong>{product.name}</strong>
-                                        <span>Popularity {product.popularity}</span>
-                                    </div>
-                                    <meter min="0" max={topPopularity} value={product.popularity}>
-                                        {product.popularity}
-                                    </meter>
-                                </li>
-                            ))}
-                        </ol>
-                    ) : (
-                        <p className="empty-copy">No products match that prefix.</p>
-                    )}
+                    <RankingList songs={globalTopSongs} highestPlayCount={highestPlayCount} />
                 </section>
+            </section>
+
+            <section className="search-section">
+                <div className="panel-heading">
+                    <p className="eyebrow">Predictive search</p>
+                    <h2>Trie suggestions by prefix</h2>
+                </div>
+
+                <form className="dashboard-form search-form">
+                    <label>
+                        Prefix
+                        <input
+                            type="text"
+                            name="prefix"
+                            value={searchForm.prefix}
+                            onChange={handleSearchChange}
+                            placeholder="al"
+                        />
+                    </label>
+
+                    <label>
+                        Top K
+                        <input
+                            type="number"
+                            name="limit"
+                            min="1"
+                            max="10"
+                            step="1"
+                            value={searchForm.limit}
+                            onChange={handleSearchChange}
+                        />
+                    </label>
+
+                    <label>
+                        Exact title
+                        <input
+                            type="text"
+                            name="exactTitle"
+                            value={searchForm.exactTitle}
+                            onChange={handleSearchChange}
+                            placeholder="Algebra Flow"
+                        />
+                    </label>
+                </form>
+
+                <div className="search-grid">
+                    <article className="data-panel">
+                        <div className="panel-heading compact">
+                            <p className="eyebrow">Exists</p>
+                            <h2>{exactExists ? 'Song found' : 'Song not found'}</h2>
+                        </div>
+                        <p className={exactExists ? 'existence-badge exists' : 'existence-badge'}>
+                            {searchForm.exactTitle || 'No title'} {exactExists ? 'is stored' : 'is not stored'}
+                        </p>
+                    </article>
+
+                    <article className="data-panel">
+                        <div className="panel-heading compact">
+                            <p className="eyebrow">Suggestions</p>
+                            <h2>{suggestions.length} prefix match(es)</h2>
+                        </div>
+                        <SongList songs={suggestions} emptyText="No songs match this prefix." />
+                    </article>
+
+                    <article className="data-panel">
+                        <div className="panel-heading compact">
+                            <p className="eyebrow">Top K</p>
+                            <h2>Best matches</h2>
+                        </div>
+                        <RankingList songs={prefixTopSongs} highestPlayCount={highestPlayCount} compact />
+                    </article>
+                </div>
             </section>
 
             <section className="details-grid">
                 <article className="data-panel">
                     <div className="panel-heading compact">
-                        <p className="eyebrow">Stored products</p>
-                        <h2>Trie words</h2>
+                        <p className="eyebrow">Graph</p>
+                        <h2>Related songs</h2>
                     </div>
 
-                    <ul className="product-list">
-                        {products.map((product) => (
-                            <li key={product.name}>
-                                <strong>{product.name}</strong>
-                                <span>{product.popularity}</span>
-                            </li>
-                        ))}
-                    </ul>
+                    <label className="select-label">
+                        Song
+                        <select value={selectedSong} onChange={(event) => setSelectedSong(event.target.value)}>
+                            {songs.map((song) => (
+                                <option key={song.title} value={song.title}>
+                                    {song.title}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <SongList songs={recommendations} emptyText="No recommendations yet." />
                 </article>
 
                 <article className="data-panel">
                     <div className="panel-heading compact">
-                        <p className="eyebrow">Prefix matches</p>
-                        <h2>Before heap ranking</h2>
+                        <p className="eyebrow">Adjacency list</p>
+                        <h2>Undirected graph</h2>
                     </div>
 
-                    <ul className="match-list">
-                        {matches.map((product) => (
-                            <li key={product.name}>
-                                <span>{product.name}</span>
-                                <strong>{product.popularity}</strong>
+                    <ul className="adjacency-list">
+                        {adjacencyRows.map((row) => (
+                            <li key={row.song.title}>
+                                <strong>{row.song.title}</strong>
+                                <span>
+                                    {row.recommendations.length > 0
+                                        ? row.recommendations.join(', ')
+                                        : 'No edges'}
+                                </span>
                             </li>
                         ))}
                     </ul>
@@ -223,7 +326,7 @@ function App() {
                 <article className="data-panel trie-panel">
                     <div className="panel-heading compact">
                         <p className="eyebrow">Trie traversal</p>
-                        <h2>Nodes and paths</h2>
+                        <h2>Song title nodes</h2>
                     </div>
 
                     <ul className="trie-list">
@@ -246,6 +349,54 @@ function App() {
                 </article>
             </section>
         </main>
+    );
+}
+
+function RankingList({ songs, highestPlayCount, compact = false }) {
+    if (songs.length === 0) {
+        return <p className="empty-copy">No ranked songs available.</p>;
+    }
+
+    return (
+        <ol className={compact ? 'ranking-list compact' : 'ranking-list'}>
+            {songs.map((song, index) => (
+                <li key={song.title}>
+                    <span className="rank">{index + 1}</span>
+                    <div>
+                        <strong>{song.title}</strong>
+                        <span>
+                            {song.artist} - {song.genre}
+                        </span>
+                    </div>
+                    <meter min="0" max={highestPlayCount} value={song.plays}>
+                        {song.plays}
+                    </meter>
+                    <em>{song.plays}</em>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+function SongList({ songs, emptyText }) {
+    if (songs.length === 0) {
+        return <p className="empty-copy">{emptyText}</p>;
+    }
+
+    return (
+        <ul className="song-list">
+            {songs.map((song) => (
+                <li key={song.title}>
+                    <div>
+                        <strong>{song.title}</strong>
+                        <span>
+                            {song.artist} - {song.genre}
+                        </span>
+                    </div>
+                    <em>{song.plays}</em>
+                </li>
+            ))}
+        </ul>
     );
 }
 

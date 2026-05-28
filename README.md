@@ -1,6 +1,6 @@
-# Challenge 11 - Tries and Heaps
+# Parcial 3 - Spotify Learning Dashboard
 
-React application for a smart product search engine. Product names are stored in a Trie and prefix search results are ranked with a Max Heap to return the Top K most popular products.
+React application for a mini educational music platform inspired by Spotify.
 
 ## Student
 
@@ -9,18 +9,18 @@ React application for a smart product search engine. Product names are stored in
 
 ## Implemented requirements
 
-- Products are inserted in a Trie with `name` and `popularity`.
-- Search supports prefixes such as `air`, `adi`, or `new`.
-- `searchTopK(prefix, k)` returns the most popular products for the prefix.
-- A Max Heap ranks results by popularity.
-- The UI allows inserting or updating products.
-- The UI shows all stored products, prefix matches before ranking, Top K results, and a Trie traversal.
+- Song titles are inserted and stored in a Trie.
+- Exact title lookup verifies whether a song exists.
+- Prefix search returns predictive song suggestions.
+- A Max Heap ranks the most played songs globally and by prefix.
+- Related songs are represented with an undirected graph.
+- The dashboard uses Sass variables and mixins for reusable visual styles.
 
 ## Main structure
 
-- `src/structures/productSearchEngine.js`: `TrieNode`, `ProductSearchEngine`, and `MaxHeap` implementation.
-- `src/App.jsx`: main interface for inserting products and running prefix searches.
-- `src/index.css`: styling for the challenge.
+- `src/structures/musicPlatform.js`: `TrieNode`, `MusicPlatform`, `MaxHeap`, and `SongGraph`.
+- `src/App.jsx`: dashboard for insertion, search, ranking, and recommendations.
+- `src/index.scss`: Sass styles for the ranking dashboard.
 
 ## Local execution
 

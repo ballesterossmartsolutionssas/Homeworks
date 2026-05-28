@@ -1,0 +1,475 @@
+$ink: #18202f;
+$muted: #657084;
+$spotify: #1db954;
+$spotify-dark: #12843d;
+$panel: #ffffff;
+$line: #dfe6ed;
+$surface: #f4f7f2;
+$accent: #2f80ed;
+$warning: #f7b731;
+$danger: #e85d75;
+
+@mixin panel($padding: 1rem) {
+    border: 1px solid rgba($ink, 0.12);
+    border-radius: 8px;
+    background: $panel;
+    box-shadow: 0 16px 36px rgba($ink, 0.08);
+    padding: $padding;
+}
+
+@mixin scroll-list($height: 390px) {
+    display: grid;
+    gap: 0.55rem;
+    max-height: $height;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    list-style: none;
+}
+
+:root {
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    color: $ink;
+    background: $surface;
+    line-height: 1.5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+#root {
+    width: min(1280px, 94vw);
+    margin: 0 auto;
+    padding: 1.5rem 0 2.5rem;
+}
+
+.app-shell {
+    display: grid;
+    gap: 1rem;
+}
+
+.hero-section {
+    @include panel(1.35rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 0.72fr);
+    gap: 1rem;
+    align-items: end;
+    min-height: 280px;
+    background:
+        linear-gradient(90deg, rgba(10, 43, 32, 0.9), rgba(11, 69, 48, 0.72)),
+        url("https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1500&q=80");
+    background-position: center;
+    background-size: cover;
+    color: #ffffff;
+}
+
+.hero-copy {
+    max-width: 760px;
+
+    p:last-child {
+        max-width: 700px;
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 1rem;
+    }
+}
+
+.eyebrow {
+    margin: 0 0 0.3rem;
+    color: $spotify;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1,
+h2 {
+    color: inherit;
+}
+
+h1 {
+    margin-bottom: 0.55rem;
+    font-size: clamp(2.25rem, 5vw, 4.4rem);
+    line-height: 1;
+}
+
+h2 {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+}
+
+.hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+
+    article {
+        min-width: 0;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 8px;
+        padding: 0.95rem;
+        background: rgba(255, 255, 255, 0.14);
+    }
+
+    span {
+        display: block;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 0.76rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    strong {
+        display: block;
+        margin-top: 0.35rem;
+        color: #ffffff;
+        font-size: 2.1rem;
+        line-height: 1;
+    }
+}
+
+.workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(290px, 380px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.details-grid,
+.search-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 1rem;
+}
+
+.control-panel,
+.results-panel,
+.data-panel,
+.search-section {
+    @include panel;
+}
+
+.results-panel {
+    display: grid;
+    align-content: start;
+    min-height: 100%;
+}
+
+.panel-heading {
+    margin-bottom: 0.85rem;
+
+    &.compact {
+        margin-bottom: 0.65rem;
+    }
+}
+
+.control-panel,
+.data-panel,
+.results-panel,
+.search-section {
+    .panel-heading {
+        color: $ink;
+    }
+}
+
+.dashboard-form {
+    display: grid;
+    gap: 0.72rem;
+
+    label {
+        display: grid;
+        gap: 0.32rem;
+        color: #354052;
+        font-weight: 700;
+    }
+
+    input {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid #cfd5df;
+        border-radius: 6px;
+        padding: 0.72rem 0.78rem;
+        color: $ink;
+        background: #ffffff;
+        outline: none;
+
+        &:focus {
+            border-color: $spotify-dark;
+            box-shadow: 0 0 0 3px rgba($spotify, 0.16);
+        }
+    }
+
+    button {
+        min-height: 44px;
+        border-radius: 6px;
+        color: #082314;
+        background: $spotify;
+        cursor: pointer;
+        font-weight: 900;
+
+        &:hover {
+            background: #28d765;
+        }
+    }
+}
+
+.form-row,
+.search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 0.42fr);
+    gap: 0.72rem;
+}
+
+.search-form {
+    grid-template-columns: minmax(160px, 1fr) 92px minmax(190px, 1fr);
+    margin-bottom: 1rem;
+}
+
+.status-message {
+    margin: 1rem 0 0;
+    border-left: 4px solid $spotify;
+    padding: 0.7rem 0.8rem;
+    color: #314036;
+    background: #edfff4;
+    font-weight: 700;
+}
+
+.ranking-list {
+    @include scroll-list;
+
+    li {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) minmax(150px, 0.35fr) 64px;
+        gap: 0.8rem;
+        align-items: center;
+        border: 1px solid $line;
+        border-radius: 8px;
+        padding: 0.85rem;
+        background: #f9fbfa;
+    }
+
+    &.compact li {
+        grid-template-columns: 40px minmax(0, 1fr) 64px;
+
+        meter {
+            display: none;
+        }
+    }
+
+    strong {
+        color: $ink;
+    }
+
+    div span {
+        display: block;
+        color: $muted;
+        font-size: 0.92rem;
+    }
+
+    em {
+        color: $spotify-dark;
+        font-style: normal;
+        font-weight: 900;
+        text-align: right;
+    }
+}
+
+.rank {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 50%;
+    color: #072815;
+    background: $spotify;
+    font-weight: 900;
+}
+
+meter {
+    width: 100%;
+    height: 16px;
+}
+
+.empty-copy {
+    margin-bottom: 0;
+    color: $muted;
+}
+
+.existence-badge {
+    display: inline-grid;
+    min-height: 42px;
+    align-items: center;
+    margin-bottom: 0;
+    border-radius: 6px;
+    padding: 0.55rem 0.75rem;
+    color: #6e2432;
+    background: rgba($danger, 0.12);
+    font-weight: 800;
+
+    &.exists {
+        color: #0f5730;
+        background: rgba($spotify, 0.16);
+    }
+}
+
+.song-list,
+.adjacency-list,
+.trie-list {
+    @include scroll-list;
+}
+
+.song-list,
+.adjacency-list {
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        border: 1px solid $line;
+        border-radius: 7px;
+        padding: 0.75rem 0.82rem;
+        background: #ffffff;
+    }
+
+    strong {
+        color: $ink;
+    }
+
+    span {
+        display: block;
+        color: $muted;
+        font-size: 0.9rem;
+    }
+
+    em {
+        flex: 0 0 auto;
+        color: $spotify-dark;
+        font-style: normal;
+        font-weight: 900;
+    }
+}
+
+.adjacency-list li {
+    display: grid;
+}
+
+.select-label {
+    display: grid;
+    gap: 0.32rem;
+    margin-bottom: 0.75rem;
+    color: #354052;
+    font-weight: 700;
+
+    select {
+        min-height: 44px;
+        border: 1px solid #cfd5df;
+        border-radius: 6px;
+        padding: 0.62rem 0.72rem;
+        color: $ink;
+        background: #ffffff;
+    }
+}
+
+.trie-panel {
+    background: #fbfcfe;
+}
+
+.trie-list li {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 0.2rem 0.7rem;
+    margin-left: min(calc(var(--depth) * 10px), 120px);
+    border: 1px solid $line;
+    border-radius: 7px;
+    padding: 0.62rem 0.7rem;
+    background: #ffffff;
+
+    strong {
+        color: $ink;
+    }
+
+    small {
+        color: $muted;
+    }
+}
+
+.node-letter {
+    grid-row: span 2;
+    display: grid;
+    min-width: 54px;
+    min-height: 36px;
+    place-items: center;
+    border-radius: 6px;
+    color: #ffffff;
+    background: $accent;
+    font-size: 0.8rem;
+    font-weight: 900;
+
+    &.end-word {
+        color: #342103;
+        background: $warning;
+    }
+}
+
+@media (max-width: 980px) {
+    .hero-section,
+    .workspace-grid,
+    .details-grid,
+    .search-grid,
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    #root {
+        width: min(95vw, 100%);
+        padding-top: 0.8rem;
+    }
+
+    .hero-section,
+    .control-panel,
+    .results-panel,
+    .data-panel,
+    .search-section {
+        padding: 0.85rem;
+    }
+
+    .hero-metrics,
+    .form-row,
+    .ranking-list li,
+    .ranking-list.compact li {
+        grid-template-columns: 1fr;
+    }
+
+    .ranking-list em {
+        text-align: left;
+    }
+
+    .trie-list li {
+        margin-left: min(calc(var(--depth) * 6px), 54px);
+    }
+}
